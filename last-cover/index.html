@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>LAST COVER : OUTBREAK · v5</title>
+<title>LAST COVER : OUTBREAK · v5.1</title>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;color:#fff;font-family:'Arial Black','Segoe UI',system-ui,-apple-system,'Malgun Gothic',sans-serif;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
@@ -111,8 +111,8 @@ body.cl #ammo{justify-content:flex-end}
 body.cl #cover{right:auto;left:max(16px,env(safe-area-inset-left))}
 #cover small{display:block;font-size:11px;font-style:normal;letter-spacing:1px;font-family:system-ui,'Malgun Gothic',sans-serif;font-weight:900}
 #cover.active{transform:translateY(6px);box-shadow:0 0 0 3px #ffd400,0 2px 0 #6b5000,0 6px 12px #000;background:radial-gradient(circle at 35% 30%,#fff,#ffe866 45%,#e0aa00)}
-#overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(0,0,0,.3),rgba(0,0,0,.85));z-index:10;padding:16px;overflow:auto}
-#panel{width:min(560px,100%);text-align:center}
+#overlay{position:fixed;inset:0;display:flex;align-items:flex-start;justify-content:center;background:linear-gradient(180deg,rgba(0,0,0,.3),rgba(0,0,0,.85));z-index:10;padding:16px;overflow:auto}
+#panel{width:min(560px,100%);text-align:center;margin:auto 0}
 #panel .logo{font-size:min(14.5vw,13vh,112px);font-style:italic;font-weight:900;line-height:.86;letter-spacing:-2px;color:#fff;text-shadow:6px 6px 0 #c4001a,10px 10px 0 #000}
 #panel .logo b{display:block;color:#ffd400}
 #panel .op{display:inline-block;margin-top:16px;background:#ffd400;color:#000;padding:3px 14px;font-size:12px;letter-spacing:4px;transform:skewX(-14deg)}
@@ -136,6 +136,28 @@ body.cl #cover{right:auto;left:max(16px,env(safe-area-inset-left))}
 @media (max-width:420px){.guide{font-size:12px}.guide div{padding:7px 8px}#desc{font-size:13px}}
 @media (max-height:520px) and (orientation:landscape){.guide{display:none}#cover{width:100px;height:100px;font-size:18px}#panel .logo{font-size:min(11vw,17vh)}}
 @media (prefers-reduced-motion:reduce){#play{animation:none}}
+
+/* Selectable character design cards (2D profile art; in-game models are actual procedural 3D). */
+#agentCards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 12px}
+.agent-card{appearance:none;position:relative;overflow:hidden;border:2px solid #3a4b58;border-radius:13px;background:linear-gradient(140deg,#1f2b37,#090f18);color:#e7eef5;font:900 12px system-ui,sans-serif;cursor:pointer;padding:0 5px 7px;min-width:0}
+.agent-card[data-g="female"]{background:linear-gradient(140deg,#33283a,#120e1a)}
+.agent-card.on{border-color:#ffd84a;box-shadow:inset 0 0 0 1px #ffd84a,0 0 16px #ffd40025}
+.agent-card svg{display:block;height:171px;width:100%;margin:auto;pointer-events:none}
+.agent-card b{display:block;color:#ffd84a;font-size:11px;letter-spacing:1.1px;margin-top:-3px}
+.agent-card small{display:block;color:#b7c7d4;font-size:10px;font-weight:600;margin-top:3px}
+@media(max-height:750px){.agent-card svg{height:124px}.agent-card{font-size:10px}#agentCards{margin-bottom:8px}}
+
+@media(max-width:430px){
+ #panel .logo{font-size:min(12vw,10vh);letter-spacing:-1px}
+ #panel .op{margin-top:9px;font-size:10px;letter-spacing:2px}
+ #desc{margin-top:9px;line-height:1.42;font-size:12px}
+ .guide{margin:9px 0;gap:6px;font-size:11px}
+ .guide div{padding:6px 7px}
+ .side{padding:6px 8px;margin:0 0 9px;font-size:12px}
+ .agent-card svg{height:150px}
+ #agentCards{gap:8px;margin-bottom:9px}
+ #play{padding:13px;font-size:20px}
+}
 </style>
 </head>
 <body>
@@ -167,7 +189,71 @@ body.cl #cover{right:auto;left:max(16px,env(safe-area-inset-left))}
     <div><b>좀비 보스</b>왼쪽 다리 → 오른쪽 다리 → 머리</div>
   </div>
   <div class="side"><span>엄폐 버튼 위치</span><div class="seg" role="group" aria-label="엄폐 버튼 위치"><button data-s="left">왼쪽</button><button data-s="right">오른쪽</button></div></div>
-  <div class="side"><span>캐릭터 선택</span><div id="genderSel"><button data-g="male" class="on">♂ 남자</button><button data-g="female">♀ 여자</button></div></div><div class="side"><span>액션 배경음악 (실시간 합성)</span><button id="musicMenu" aria-label="배경음악 설정" aria-pressed="true">♫ 켜짐</button></div>
+  <div class="side"><span>캐릭터 선택</span><div id="genderSel"><button data-g="male" class="on">♂ 남자</button><button data-g="female">♀ 여자</button></div></div><div id="agentCards"><button type="button" class="agent-card on" data-g="male" aria-label="남자 캐릭터 선택">
+<svg viewBox="0 0 160 218" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+ <defs><linearGradient id="gmale" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#448aa0"/><stop offset="1" stop-color="#27323d"/></linearGradient></defs>
+ <circle cx="80" cy="67" r="62" fill="none" stroke="#448aa0" stroke-opacity=".18" stroke-width="1.5"/>
+ <path d="M4 216 Q15 193 48 189L112 189Q145 197 156 216Z" fill="#172330" opacity=".6"/>
+ <path d="M59 122L57 194H78L80 145L82 194H104L101 122" fill="#27323d" stroke="#0e141a" stroke-width="4"/>
+ <path d="M64 126L62 189M96 126L99 189" fill="none" stroke="#74818c" stroke-width="2"/>
+ <path d="M70 133H90L95 149H65Z" fill="#131d28"/>
+ <path d="M55 185L78 185L78 209L52 209Z" fill="#101c25" stroke="#354452" stroke-width="2"/>
+ <path d="M83 185L105 185L109 209L84 209Z" fill="#101c25" stroke="#354452" stroke-width="2"/>
+ <path d="M52 67Q45 60 38 71L27 112Q27 128 44 130L54 118L64 77Z" fill="#448aa0" stroke="#16262f" stroke-width="3"/>
+ <path d="M108 67Q115 60 122 71L133 112Q133 128 116 130L106 118L96 77Z" fill="#448aa0" stroke="#16262f" stroke-width="3"/>
+ <path d="M44 127L49 117L56 119L50 135Z" fill="#283640"/>
+ <path d="M116 127L111 117L104 119L110 135Z" fill="#283640"/>
+ <path d="M53 65Q62 59 72 61L88 61Q99 59 107 65L110 128Q102 135 80 136Q57 135 50 128Z" fill="url(#gmale)" stroke="#101c25" stroke-width="3"/>
+ <path d="M80 64V131" stroke="#d4dfdc" stroke-width="2" opacity=".8"/>
+ <path d="M63 117H97V130H63Z" fill="#448aa0" stroke="#18252f" stroke-width="1.5"/>
+ <path d="M63 112L53 115M97 112L107 115" stroke="#16232d" stroke-width="2"/>
+ <path d="M72 59L72 72L88 72L88 59" fill="#ba9479" stroke="#1d2a32" stroke-width="2"/>
+ <g transform="translate(24 21) scale(.7)">
+ <path d="M56 42Q50 14 79 13Q111 14 105 43L105 63L97 74L63 74L55 63Z" fill="#448aa0" stroke="#111c25" stroke-width="3"/>
+ <ellipse cx="80" cy="48" rx="19" ry="24" fill="#c99d7e" stroke="#765a4c" stroke-width="1.5"/>
+ <path d="M57 40Q60 7 80 10Q106 10 104 41L101 34Q92 20 80 19Q64 20 60 35Z" fill="#448aa0" stroke="#15222b" stroke-width="2.3"/>
+ <path d="M61 39H99V53H61Z" fill="#18242d" stroke="#0f181f" stroke-width="1.5"/>
+ <rect x="65" y="42" width="14" height="8" rx="3" fill="#7bd4e4" opacity=".9"/>
+ <rect x="82" y="42" width="14" height="8" rx="3" fill="#7bd4e4" opacity=".9"/>
+ <path d="M59 52Q64 70 70 73L88 73Q100 67 101 52" fill="none" stroke="#273440" stroke-width="6"/>
+ <path d="M77 60Q80 63 83 60" stroke="#704b46" stroke-width="1.7" fill="none"/>
+ </g>
+ <path d="M76 73L74 89M84 73L86 89" stroke="#ffd355" stroke-width="2.5"/>
+ <path d="M61 76L66 112M99 76L94 112" stroke="#0d2128" stroke-width="3" opacity=".45"/>
+ <path d="M66 82H73" stroke="#ffd355" stroke-width="2"/>
+ </svg><b>MALE AGENT</b><small>틸 후디 · 전술 고글</small></button><button type="button" class="agent-card" data-g="female" aria-label="여자 캐릭터 선택">
+<svg viewBox="0 0 160 218" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+ <defs><linearGradient id="gfemale" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#9d6385"/><stop offset="1" stop-color="#27323d"/></linearGradient></defs>
+ <circle cx="80" cy="67" r="62" fill="none" stroke="#9d6385" stroke-opacity=".18" stroke-width="1.5"/>
+ <path d="M4 216 Q15 193 48 189L112 189Q145 197 156 216Z" fill="#172330" opacity=".6"/>
+ <path d="M59 122L57 194H78L80 145L82 194H104L101 122" fill="#27323d" stroke="#0e141a" stroke-width="4"/>
+ <path d="M64 126L62 189M96 126L99 189" fill="none" stroke="#74818c" stroke-width="2"/>
+ <path d="M70 133H90L95 149H65Z" fill="#131d28"/>
+ <path d="M55 185L78 185L78 209L52 209Z" fill="#101c25" stroke="#354452" stroke-width="2"/>
+ <path d="M83 185L105 185L109 209L84 209Z" fill="#101c25" stroke="#354452" stroke-width="2"/>
+ <path d="M52 67Q45 60 38 71L27 112Q27 128 44 130L54 118L64 77Z" fill="#9d6385" stroke="#16262f" stroke-width="3"/>
+ <path d="M108 67Q115 60 122 71L133 112Q133 128 116 130L106 118L96 77Z" fill="#9d6385" stroke="#16262f" stroke-width="3"/>
+ <path d="M44 127L49 117L56 119L50 135Z" fill="#283640"/>
+ <path d="M116 127L111 117L104 119L110 135Z" fill="#283640"/>
+ <path d="M53 65Q62 59 72 61L88 61Q99 59 107 65L110 128Q102 135 80 136Q57 135 50 128Z" fill="url(#gfemale)" stroke="#101c25" stroke-width="3"/>
+ <path d="M80 64V131" stroke="#d4dfdc" stroke-width="2" opacity=".8"/>
+ <path d="M63 117H97V130H63Z" fill="#9d6385" stroke="#18252f" stroke-width="1.5"/>
+ <path d="M63 112L53 115M97 112L107 115" stroke="#16232d" stroke-width="2"/>
+ <path d="M72 59L72 72L88 72L88 59" fill="#ba9479" stroke="#1d2a32" stroke-width="2"/>
+ <g transform="translate(24 21) scale(.7)">
+ <path d="M56 42Q50 14 79 13Q111 14 105 43L105 63L97 74L63 74L55 63Z" fill="#9d6385" stroke="#111c25" stroke-width="3"/>
+ <ellipse cx="80" cy="48" rx="19" ry="24" fill="#c99d7e" stroke="#765a4c" stroke-width="1.5"/>
+ <path d="M57 40Q60 7 80 10Q106 10 104 41L101 34Q92 20 80 19Q64 20 60 35Z" fill="#9d6385" stroke="#15222b" stroke-width="2.3"/>
+ <path d="M61 39H99V53H61Z" fill="#18242d" stroke="#0f181f" stroke-width="1.5"/>
+ <rect x="65" y="42" width="14" height="8" rx="3" fill="#7bd4e4" opacity=".9"/>
+ <rect x="82" y="42" width="14" height="8" rx="3" fill="#7bd4e4" opacity=".9"/>
+ <path d="M59 52Q64 70 70 73L88 73Q100 67 101 52" fill="none" stroke="#273440" stroke-width="6"/>
+ <path d="M77 60Q80 63 83 60" stroke="#704b46" stroke-width="1.7" fill="none"/>
+ </g>
+ <path d="M76 73L74 89M84 73L86 89" stroke="#eed0a8" stroke-width="2.5"/>
+ <path d="M61 76L66 112M99 76L94 112" stroke="#0d2128" stroke-width="3" opacity=".45"/>
+ <path d="M66 82H73" stroke="#eed0a8" stroke-width="2"/>
+ </svg><b>FEMALE AGENT</b><small>와인 후디 · 소형 고글</small></button></div><div class="side"><span>액션 배경음악 (실시간 합성)</span><button id="musicMenu" aria-label="배경음악 설정" aria-pressed="true">♫ 켜짐</button></div>
   <button id="play">▶ 처음부터 플레이</button><button id="playZombie">☣ 좀비 챕터부터 시작 (테스트)</button>
   <div id="note">세로 화면 권장 · 권총 기본 지급 · 로켓 런처는 소모성 3발 · Three.js 최초 로딩 시 인터넷 필요</div>
 </div></div>
@@ -460,72 +546,129 @@ function chibi(type){
   root.scale.setScalar(s.sc);
   return{root,pivot,legL,legR,H,flash:fl};
 }
-/* player: original agent — dark-teal jacket, yellow scarf, brown ponytail */
+/* player: v5.1 refined anatomical silhouette — 1.9m 3D field agent in a real hoodie and goggles */
 const PL=(()=>{
-  const jacket=share(M({color:'#2f5566',roughness:.7})),pants=share(M({color:'#2b2f36',roughness:.85})),hair=share(M({color:'#5a3524',roughness:.6})),scarf=share(M({color:'#ffd400',roughness:.6})),dark=gunM;
+  const jacket=share(M({color:'#346f83',roughness:.94})),hoodInside=share(M({color:'#1e343d',roughness:1}));
+  const pants=share(M({color:'#28313c',roughness:.91})),pantsSeam=share(M({color:'#536271',roughness:.85}));
+  const hair=share(M({color:'#382e2c',roughness:.98})),skin=share(M({color:'#d5ab8d',roughness:.92}));
+  const scarf=share(M({color:'#ffcb4b',roughness:.84})),dark=gunM;
+  const zipper=share(M({color:'#e1e3d5',roughness:.65,metalness:.2})),goggleRim=share(M({color:'#202b35',roughness:.48,metalness:.14}));
+  const goggleGlass=share(M({color:'#65b9ca',emissive:'#0a3540',emissiveIntensity:.18,metalness:.72,roughness:.24,transparent:true,opacity:.85}));
+  const strap=share(M({color:'#171e27',roughness:1})),gloves=share(M({color:'#333940',roughness:.85}));
+  const shoeSole=share(M({color:'#10151a',roughness:.94})),equipment=share(M({color:'#535f5f',roughness:.65,metalness:.15}));
   const root=new THREE.Group(),pivot=new THREE.Group();root.add(pivot);
-  const legL=new THREE.Group(),legR=new THREE.Group();legL.position.set(-.11,.32,0);legR.position.set(.11,.32,0);pivot.add(legL,legR);
-  for(const L of[legL,legR]){part(L,CG(.09,.08,.26),pants,0,-.13,0);part(L,SG(.11,12,8),bootM,0,-.27,.03,{s:[1,.6,1.35]})}
-  part(pivot,SG(.28),jacket,0,.57,0,{s:[1,1.1,.86]});
-  part(pivot,CG(.25,.27,.06),dark,0,.4,0);
-  part(pivot,new THREE.TorusGeometry(.17,.06,8,18),scarf,0,.82,0,{r:[Math.PI/2,0,0]});
-  part(pivot,BG(.12,.3,.04),scarf,.06,.68,-.24,{r:[.25,0,.15]});
-  const H=new THREE.Group();H.position.set(0,1.08,0);pivot.add(H);
-  part(H,SG(.33,22,16),skinM,0,0,0);
-  part(H,SG(.35,22,14,Math.PI*.7),hair,0,.03,-.02,{r:[-.55,0,0]});
-  const pony=part(H,SG(.13,12,10),hair,0,-.06,-.38,{s:[1,1.7,1]});
-  part(H,SG(.06,10,8),scarf,0,.08,-.33);
-  part(H,new THREE.TorusGeometry(.355,.095,10,24,Math.PI*2),jacket,0,.04,-.12,{r:[-.25,0,0]});
-  const goggles=part(H,BG(.67,.17,.16),dark,0,.065,.26,{cast:false});
-  for(const x of[-.17,.17])part(H,BG(.235,.12,.026),share(M({color:'#79dae9',metalness:.85,roughness:.1,transparent:true,opacity:.85})),x,.065,.357,{cast:false});
-  part(H,BG(.64,.055,.06),dark,0,.09,-.285,{cast:false});
-  for(const x of[-.15,.15])part(pivot,CG(.018,.018,.32,6),scarf,x,.73,.24,{cast:false});
-  for(const sx of[-1,1])part(H,CG(.09,.09,.06,14),dark,sx*.35,-.02,0,{r:[0,0,Math.PI/2]});
-  const upper=new THREE.Group();upper.position.set(0,.86,0);upper.rotation.order='YXZ';pivot.add(upper);
-  part(upper,SG(.085,12,10),jacket,.3,.03,.28,{s:[1,1,3],r:[0,-.2,0]});
-  part(upper,SG(.085,12,10),jacket,.1,.01,.33,{s:[1,1,3.2],r:[0,.45,0]});
-  part(upper,SG(.07,10,8),skinM,.37,.05,.54);part(upper,SG(.067,10,8),skinM,.31,.04,.57);
-  const gun=new THREE.Group();gun.position.set(.36,.13,.6);gun.scale.setScalar(1.55);upper.add(gun);
+  // Independently posed, anatomically proportioned long legs; boots connect to the ground.
+  const legL=new THREE.Group(),legR=new THREE.Group();legL.position.set(-.145,.89,0);legR.position.set(.145,.89,0);pivot.add(legL,legR);
+  for(const L of [legL,legR]){
+    part(L,CG(.12,.11,.43,18),pants,0,-.215,0);
+    part(L,SG(.116,18,12),pants,0,-.43,.008,{s:[1,.83,.92]});
+    part(L,CG(.095,.075,.39,18),pants,0,-.64,-.018,{r:[-.035,0,0]});
+    part(L,SG(.109,16,12),equipment,0,-.45,.09,{s:[1,.73,.5]});
+    part(L,SG(.145,18,12),bootM,0,-.83,.075,{s:[.95,.6,1.65]});
+    part(L,BG(.26,.035,.33),shoeSole,0,-.89,.10);
+    part(L,BG(.115,.045,.018),pantsSeam,0,-.785,.193,{cast:false});
+    part(L,BG(.018,.25,.02),pantsSeam,.095,-.26,.09,{cast:false});
+  }
+  const hips=part(pivot,CG(.19,.25,.20,20),pants,0,.92,0);
+  const belt=part(pivot,CG(.204,.20,.065,20),strap,0,1.005,0);
+  part(pivot,BG(.10,.065,.045),equipment,0,1.0,.21);
+  // Zip hoodie: sculpted tapered body, shoulder seams, pouch and separate hanging fabric hood.
+  const torso=part(pivot,CG(.27,.205,.56,24),jacket,0,1.235,-.012);
+  part(pivot,SG(.265,22,14),jacket,0,1.43,-.015,{s:[1.13,.35,.85]});
+  part(pivot,BG(.018,.43,.016),zipper,0,1.16,.211,{cast:false});
+  part(pivot,BG(.265,.18,.042),jacket,0,1.078,.195);
+  for(const sx of [-1,1]){
+    part(pivot,BG(.08,.045,.016),hoodInside,sx*.112,1.16,.233,{cast:false});
+    part(pivot,CG(.011,.011,.29,8),scarf,sx*.068,1.405,.217,{cast:false});
+    part(pivot,SG(.125,16,10),jacket,sx*.258,1.435,0,{s:[1.1,.8,1]});
+    // Backpack harness and utility gear are seen from the rear camera.
+    part(pivot,BG(.055,.37,.042),strap,sx*.195,1.255,-.20,{r:[0,0,sx*.13]});
+    part(pivot,BG(.09,.18,.095),equipment,sx*.216,1.02,-.18);
+  }
+  part(pivot,BG(.29,.31,.11),equipment,0,1.24,-.25);
+  part(pivot,BG(.26,.15,.018),strap,0,1.25,-.309);
+  part(pivot,BG(.105,.025,.019),scarf,0,1.36,-.318,{cast:false});
+  // Head and hood: head diameter .36 vs full figure 1.9 (previous figure .66 vs 1.45).
+  const H=new THREE.Group();H.position.set(0,1.66,.012);pivot.add(H);
+  part(pivot,CG(.085,.08,.095,16),skin,0,1.505,.01);
+  part(H,SG(.176,24,18),skin,0,0,.021,{s:[.93,1.09,.86]});
+  part(H,SG(.194,22,14),jacket,0,.023,-.075,{s:[1.11,1.18,1.02]});
+  part(H,SG(.198,22,14,Math.PI*.55),jacket,0,.068,-.035);
+  part(H,new THREE.TorusGeometry(.180,.031,8,30),hoodInside,0,.002,.074,{r:[0,0,0]});
+  part(H,SG(.10,16,12),skin,0,-.09,.073,{s:[1,.60,.8]});
+  part(H,SG(.036,12,8),skin,0,-.015,.172,{s:[.76,.8,.85]});
+  // Goggles hug the face instead of one giant rectangular visor.
+  part(H,BG(.365,.105,.10),goggleRim,0,.052,.145,{cast:false});
+  for(const sx of [-1,1]){
+    part(H,BG(.149,.078,.031),goggleGlass,sx*.094,.055,.206,{cast:false});
+    part(H,BG(.031,.014,.028),zipper,sx*.15,.063,.228,{cast:false});
+  }
+  part(H,BG(.05,.022,.04),goggleRim,0,.055,.22,{cast:false});
+  part(H,BG(.41,.048,.055),strap,0,.054,-.10,{cast:false});
+  part(H,BG(.08,.016,.016),strap,0,-.115,.161,{cast:false});
+  // Hood stitching and woman-specific ponytail, visible behind the head.
+  part(H,SG(.09,14,10),hair,0,-.005,-.22,{s:[1.1,.55,.6]});
+  const pony=part(H,SG(.083,16,10),hair,0,-.17,-.21,{s:[.84,1.35,.85]});
+  part(H,BG(.065,.035,.027),scarf,0,-.095,-.225,{cast:false});
+  // Independent aiming group; sleeves follow aiming and reload animation.
+  const upper=new THREE.Group();upper.position.set(0,1.35,.045);upper.rotation.order='YXZ';pivot.add(upper);
+  for(const sx of [-1,1]){
+    part(upper,SG(.115,18,12),jacket,sx*.275,.08,.075,{s:[.91,1,.85]});
+    part(upper,CG(.10,.092,.31,18),jacket,sx*.29,-.085,.18,{r:[.68,0,sx*.16]});
+    part(upper,SG(.09,14,12),jacket,sx*.285,-.19,.29);
+    part(upper,CG(.084,.072,.29,18),jacket,sx*.20,-.165,.41,{r:[1.25,0,-sx*.37]});
+    part(upper,SG(.078,14,10),gloves,sx*.12,-.13,.52,{s:[.8,.85,1]});
+  }
+  part(upper,BG(.13,.022,.06),equipment,.02,-.06,.60);
+  // Weapon models positioned at a plausible two-handed chest-height firing grip.
+  const gun=new THREE.Group();gun.position.set(.16,-.095,.57);upper.add(gun);
   const models={},magazines={};
   const silver=share(M({color:'#90a8af',metalness:.75,roughness:.3})),tan=share(M({color:'#816c4d',roughness:.65})),olive=share(M({color:'#70896b',metalness:.4,roughness:.55}));
-  const model=(id)=>{const m=new THREE.Group();gun.add(m);m.visible=false;models[id]=m;return m};
+  const model=id=>{const m=new THREE.Group();gun.add(m);m.visible=false;models[id]=m;return m};
   const pistol=model('pistol');
-  part(pistol,BG(.105,.14,.40),dark,0,0,.04);part(pistol,BG(.09,.05,.3),silver,0,.08,.05);
-  magazines.pistol=part(pistol,BG(.08,.19,.10),dark,0,-.15,-.065);
+  part(pistol,BG(.095,.12,.34),dark,0,0,.055);part(pistol,BG(.10,.05,.28),silver,0,.072,.064);
+  magazines.pistol=part(pistol,BG(.07,.16,.095),dark,0,-.145,-.050);
   const rifle=model('rifle');
-  part(rifle,BG(.16,.20,.78),dark,0,0,.21);part(rifle,BG(.22,.08,.30),silver,0,.09,.03);
-  part(rifle,CG(.042,.042,.48,10),dark,0,.01,.75,{r:[Math.PI/2,0,0]});
-  part(rifle,BG(.1,.18,.36),olive,0,-.05,-.27);part(rifle,BG(.10,.10,.15),silver,0,.19,.02);
-  magazines.rifle=part(rifle,BG(.11,.24,.12),tan,0,-.24,.15);
+  part(rifle,BG(.14,.17,.67),dark,0,.015,.22);part(rifle,BG(.19,.06,.25),silver,0,.105,.065);
+  part(rifle,CG(.036,.036,.42,10),dark,0,.03,.69,{r:[Math.PI/2,0,0]});
+  part(rifle,BG(.11,.12,.31),olive,0,-.065,-.22);part(rifle,BG(.083,.07,.14),silver,0,.174,.04);
+  magazines.rifle=part(rifle,BG(.10,.21,.11),tan,0,-.205,.15);
   const shotgun=model('shotgun');
-  part(shotgun,BG(.17,.19,.84),dark,0,0,.20);part(shotgun,BG(.20,.14,.42),tan,0,-.05,.06);
-  for(const dx of[-.055,.055])part(shotgun,CG(.042,.042,.63,12),silver,dx,.025,.79,{r:[Math.PI/2,0,0]});
-  part(shotgun,BG(.09,.16,.30),tan,0,-.06,-.33);
-  magazines.shotgun=part(shotgun,BG(.15,.14,.2),dark,0,-.18,.08);
+  part(shotgun,BG(.16,.15,.76),dark,0,0,.22);part(shotgun,BG(.18,.13,.39),tan,0,-.04,.06);
+  for(const dx of[-.05,.05])part(shotgun,CG(.037,.037,.58,12),silver,dx,.015,.71,{r:[Math.PI/2,0,0]});
+  part(shotgun,BG(.09,.13,.28),tan,0,-.045,-.30);
+  magazines.shotgun=part(shotgun,BG(.14,.12,.18),dark,0,-.16,.06);
   const rocket=model('rocket');
-  part(rocket,CG(.22,.22,1.25,14),olive,0,.06,.24,{r:[Math.PI/2,0,0]});
-  part(rocket,CG(.25,.25,.08,14),silver,0,.06,.81,{r:[Math.PI/2,0,0]});
-  part(rocket,BG(.14,.24,.18),dark,0,-.16,.05);part(rocket,BG(.17,.07,.12),silver,0,.33,-.15);
-  magazines.rocket=part(rocket,BG(.11,.16,.10),dark,0,-.2,0);
-  const fl=new THREE.Sprite(flashMat);fl.scale.setScalar(.8);fl.position.set(0,.03,.42);fl.visible=false;gun.add(fl);
-  const muzzle=new THREE.Object3D();muzzle.position.set(0,.03,.42);gun.add(muzzle);
+  part(rocket,CG(.19,.19,1.13,16),olive,0,.05,.23,{r:[Math.PI/2,0,0]});
+  part(rocket,CG(.22,.22,.075,16),silver,0,.05,.78,{r:[Math.PI/2,0,0]});
+  part(rocket,BG(.12,.22,.17),dark,0,-.15,.04);part(rocket,BG(.16,.065,.12),silver,0,.29,-.15);
+  magazines.rocket=part(rocket,BG(.11,.16,.09),dark,0,-.18,0);
+  const fl=new THREE.Sprite(flashMat);fl.scale.setScalar(.8);fl.position.set(0,.025,.44);fl.visible=false;gun.add(fl);
+  const muzzle=new THREE.Object3D();muzzle.position.set(0,.025,.44);gun.add(muzzle);
   models.pistol.visible=true;
   root.traverse(o=>{o.userData.keep=true});
-  return{root,pivot,legL,legR,upper,H,gun,models,magazines,flash:fl,muzzle,jacket,scarf,pony,gender:'male',yaw:0,pitch:0,tYaw:0,tPitch:0,kick:0,flinch:0,reloadPose:0};
+  return{root,pivot,legL,legR,upper,H,gun,models,magazines,flash:fl,muzzle,jacket,scarf,pony,torso,hips,belt,gender:'male',yaw:0,pitch:0,tYaw:0,tPitch:0,kick:0,flinch:0,reloadPose:0};
 })();
 scene.add(PL.root);
 function setGender(g){
-  PL.gender=g;PL.jacket.color.set(g==='female'?'#a24b70':'#346f83');PL.scarf.color.set(g==='female'?'#f8dc86':'#ffcb4b');
-  PL.pony.visible=g==='female';PL.H.scale.setScalar(g==='female'?.97:1);
-  document.querySelectorAll('#genderSel button').forEach(b=>b.classList.toggle('on',b.dataset.g===g));
+  PL.gender=g;
+  PL.jacket.color.set(g==='female'?'#87536e':'#346f83');
+  PL.scarf.color.set(g==='female'?'#edc58b':'#ffcb4b');
+  PL.pony.visible=g==='female';
+  PL.torso.scale.x=g==='female'?.91:1;
+  PL.hips.scale.x=g==='female'?.91:1;
+  PL.H.scale.setScalar(g==='female'?.96:1);
+  document.querySelectorAll('#genderSel button,#agentCards button').forEach(b=>b.classList.toggle('on',b.dataset.g===g));
+  if(typeof renderAgentPortrait==='function')renderAgentPortrait(g);
 }
-document.querySelectorAll('#genderSel button').forEach(b=>b.addEventListener('click',()=>setGender(b.dataset.g)));
+document.querySelectorAll('#genderSel button,#agentCards button').forEach(b=>b.addEventListener('click',()=>setGender(b.dataset.g)));
 setGender('male');
 function setGunModel(key){
   for(const k in PL.models)PL.models[k].visible=(k===key);
-  const z=key==='pistol'?.42:key==='rifle'?.97:key==='shotgun'?1.12:1.00;
-  PL.muzzle.position.z=z;PL.flash.position.z=z+.06;PL.flash.scale.setScalar(key==='rocket'?2:key==='shotgun'?1.3:.8);
-  PL.gun.rotation.z=key==='rocket'?-.15:0;
+  const z=key==='pistol'?.40:key==='rifle'?.94:key==='shotgun'?1.05:.92;
+  PL.muzzle.position.z=z;PL.flash.position.z=z+.05;
+  PL.flash.scale.setScalar(key==='rocket'?2:key==='shotgun'?1.3:.8);
+  PL.gun.rotation.z=key==='rocket'?-.12:0;
 }
 
 const muzzleLight=new THREE.PointLight(0xffc060,0,8,2);scene.add(muzzleLight);
@@ -750,7 +893,7 @@ function newGame(zstart=false){
   beginStage(zstart?3:0);SFX.ui(660);
 }
 function beginStage(s){
-  G.stage=s;G.area=0;G.boss=null;G.time=Math.max(G.time,s>=3?70:45);buildStage(s);G.phase='wait';G.waitT=3;coverAmt=1;G.coverHP=6;G.reloading=false;
+  G.stage=s;G.area=0;G.boss=null;G.bossVictoryPending=false;G.time=Math.max(G.time,s>=3?70:45);buildStage(s);G.phase='wait';G.waitT=3;coverAmt=1;G.coverHP=6;G.reloading=false;
   $('bossbar').style.display='none';
   banner(`STAGE ${s+1}`,STAGES[s].name,STAGES[s].kr+(s>=3?' · 바이러스 격리 실패':' · KRS 작전'),2.6);setStageHud();$('chapterBadge').textContent=s>=3?'CHAPTER 2 · OUTBREAK':'CHAPTER 1 · KRS BLACKSITE';
   $('fade').style.opacity='0';
@@ -787,7 +930,7 @@ function removeEnemy(e){
 function startCombat(){
   const a=G.areas[G.area];G.phase='combat';G.left=a.count;G.spawnCd=.25;
   if(a.boss){G.boss=spawnEnemy(a.bossSp,a.zombie?'zboss':'boss');G.spawnCd=2}
-  G.coverHP=6;msg(a.zombie?'INFECTED!':'ACTION!','yel',.9);SFX.action();
+  G.coverHP=6;G.bossVictoryPending=false;msg(a.zombie?'INFECTED!':'ACTION!','yel',.9);SFX.action();
 }
 function areaClear(){
   const last=G.area===2;
@@ -817,7 +960,7 @@ function gameOver(reason){
 function showResult(win,reason){
   $('overlay').style.display='flex';
   $('panel').querySelector('.logo').innerHTML=win?'MISSION<b>COMPLETE</b>':'GAME<b>OVER</b>';
-  $('panel').querySelector('.op').textContent=win?'KRS OUTBREAK CONTAINED':reason;
+  $('panel').querySelector('.op').textContent=win?'PATIENT ZERO ELIMINATED · KRS OUTBREAK CONTAINED':reason;
   const acc=G.shots?Math.round(G.hits/G.shots*100):0;
   $('desc').innerHTML=`점수 <b>${G.score.toLocaleString()}</b> · 처치 <b>${G.kills}</b> · 명중률 <b>${acc}%</b> · 도달 <b>STAGE ${G.stage+1}-${G.area+1}</b>`;
   document.querySelector('.guide').style.display='none';$('play').textContent='다시 도전';
@@ -854,7 +997,7 @@ function damage(e,head,pt,amount,weak){
 function kill(e,head,blast,silent){
   if(e.dead)return;e.dead=true;e.state='die';e.t=0;e.marker.visible=false;e.flash.visible=false;if(e.sp)e.sp.busy=false;e.spin=rnd(-1,1)>0?1:-1;
   if(silent)return;
-  G.kills++;const pts=e.s.score+(head?100:0);G.score+=pts;SFX.hit();
+  G.kills++;const pts=e.s.score+(head?100:0);G.score+=pts;SFX.hit();  if(e===G.boss)G.bossVictoryPending=true;
   const hp=e.root.position.clone().add(V(0,2.2*e.s.sc,0));
   setTimeout(()=>popup(hp,`+${pts}`,'sc'),120);
   if(e.type==='boss'||e.type==='zboss'){$('bossbar').style.display='none';burst(hp,40,'fire',5);boomLight.position.copy(hp);boomLight.intensity=7;shake=1.4;SFX.boom();msg('TARGET DOWN','yel',1.6)}
@@ -997,7 +1140,8 @@ function updateZombie(e,dt){
   if(rp.z<at)rp.z=Math.min(at,rp.z+speed*dt);
   const moving=rp.z<at-.06,sw=Math.sin(clock*(e.type==='runner'?18:11)+rp.x)*.7;
   e.legL.rotation.x=moving?sw:0;e.legR.rotation.x=moving?-sw:0;
-  e.H.rotation.z=Math.sin(clock*2+rp.x)*.1;  e.pivot.position.y=e.type==='zboss'&&e.legsDown?-.3:Math.abs(sw)*.07;
+  e.H.rotation.z=Math.sin(clock*2+rp.x)*.1;
+  e.pivot.position.y=e.type==='zboss'&&e.legsDown?-.3:Math.abs(sw)*.07;
   e.pivot.rotation.z=Math.sin(clock*2.8+rp.x)*.10;
   if(moving&&e.type!=='zboss'&&Math.random()<dt*.23)SFX.undead();
   if(e.type==='zboss'){
@@ -1093,8 +1237,8 @@ function updatePlayer(dt,ph){
   // Pop the gun ABOVE the 1.4m concrete lip before firing. While hiding, curl it under the lip.
   const reloadK=G.reloading?G.reloadT/WEAPONS[G.weapon].reload:0;
   const wiggle=G.reloading?Math.sin(reloadK*Math.PI)*.28:0;
-  PL.upper.position.y=ph==='move'?0:lerp(.70,-.15,coverAmt)-wiggle*.26;
-  PL.upper.rotation.set(PL.pitch-PL.kick*(G.weapon==='rocket'?.55:.36)+wiggle*.85,PL.yaw,wiggle*(sideCur>0?-.5:.5));
+  PL.upper.position.y=ph==='move'?0:lerp(.16,-.20,coverAmt)-wiggle*.17;
+  PL.upper.rotation.set(PL.pitch-PL.kick*(G.weapon==='rocket'?.46:.26)+wiggle*.6,PL.yaw,wiggle*(sideCur>0?-.38:.38));
   PL.upper.scale.x=sideCur>=0?-1:1;
   for(const [key,mag] of Object.entries(PL.magazines)){
     const drop=G.reloading&&key===G.weapon?Math.sin(Math.PI*Math.min(1,reloadK))*.34:0;
@@ -1166,12 +1310,12 @@ function update(dt){
     G.waitT-=dt;if(bannerT<=0&&msgT<=0&&G.waitT>.2)msg('WAIT','red',.5);
     if(G.waitT<=0)startCombat();
   }else if(ph==='combat'){
-    G.time-=dt;G.inv=Math.max(0,G.inv-dt);
-    if(G.time<=0){G.time=0;gameOver('TIME OVER');return}
+    if(!G.bossVictoryPending)G.time-=dt;G.inv=Math.max(0,G.inv-dt);
+    if(G.time<=0){if(G.bossVictoryPending){areaClear()}else{G.time=0;gameOver('TIME OVER')}return}
     const a=G.areas[G.area],st=STAGES[G.stage];
     const alive=enemies.filter(e=>!e.dead).length,maxA=a.boss?(a.zombie?5:3):st.maxAlive;
     if(G.left>0&&alive<maxA){G.spawnCd-=dt;if(G.spawnCd<=0){const free=a.spawns.filter(s=>!s.busy);if(free.length){const sp=free[Math.random()*free.length|0];const eliteP=.14+G.stage*.09+G.area*.04;spawnEnemy(sp,a.zombie?(Math.random()<(G.stage===3?.19:.35)?'runner':'zombie'):(Math.random()<eliteP?'elite':'regular'));G.left--}G.spawnCd=a.boss?rnd(1.4,2.5):a.zombie?rnd(.7,1.2):rnd(.45,1.2)}}
-    if(a.boss){if(G.boss&&G.boss.dead&&G.boss.t>1.1)areaClear()}
+    if(a.boss){if(G.boss&&G.boss.dead&&(G.boss.gone||G.boss.t>=(G.boss.type==='zboss'?.92:1.1)))areaClear()}
     else if(G.left<=0&&enemies.every(e=>e.dead))areaClear();
   }else if(ph==='clear'){
     G.t-=dt;if(G.t<=0)startMove();
@@ -1181,7 +1325,7 @@ function update(dt){
     if(G.moveT>=1){G.area++;setStageHud();G.phase='wait';G.waitT=1.3;msg('WAIT','red',.5)}
   }else if(ph==='stageclear'){
     G.t-=dt;if(G.t<1&&$('fade').style.opacity!=='1')$('fade').style.opacity='1';
-    if(G.t<=0){if(G.stage===STAGES.length-1){G.phase='end';MUSIC.stop();$('hud').style.display='none';$('cover').style.display='none';$('quickWeapon').style.display='none';$('reticle').style.display='none';showResult(true);$('fade').style.opacity='.4'}
+    if(G.t<=0){if(G.stage===STAGES.length-1){G.phase='end';coverHeld=false;G.fireHeld=false;MUSIC.stop();$('hud').style.display='none';$('cover').style.display='none';$('quickWeapon').style.display='none';$('reticle').style.display='none';showResult(true);$('fade').style.opacity='.4'}
       else if(G.stage===2)startCrashCinematic();else beginStage(G.stage+1)}
   }
   else if(ph==='cinematic'){
