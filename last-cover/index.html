@@ -24,6 +24,22 @@ canvas{display:block;width:100vw;height:100vh;height:100dvh;touch-action:none;cu
 #tr{position:absolute;top:max(10px,env(safe-area-inset-top));right:max(14px,env(safe-area-inset-right));text-align:right}
 #score{font-size:20px}
 #swap,#music{pointer-events:auto;margin-top:8px;border:2px solid #000;background:#1d2632cc;color:#ffd84a;font:900 11px/1 system-ui,sans-serif;padding:7px 9px;border-radius:14px;letter-spacing:1px}
+/* PC hover tooltips: data-tip text, shown only on devices with a real hover pointer */
+@media (hover:hover) and (pointer:fine){
+ [data-tip]{position:relative}
+ [data-tip]::after{content:attr(data-tip);position:absolute;z-index:20;white-space:pre;pointer-events:none;opacity:0;transition:opacity .12s .25s;
+  background:#0c131cf2;color:#e8f1f8;border:1px solid #ffd84a;border-radius:7px;padding:7px 9px;font:700 11.5px/1.45 system-ui,'Malgun Gothic',sans-serif;
+  letter-spacing:0;font-style:normal;text-align:left;text-shadow:none;box-shadow:0 6px 16px #000a}
+ [data-tip]:hover::after{opacity:1}
+ #tr [data-tip]::after{right:calc(100% + 8px);top:50%;transform:translateY(-50%)}
+ #cover[data-tip]::after,#quickWeapon[data-tip]::after{bottom:calc(100% + 10px);right:0}
+ body.cl #cover[data-tip]::after,body.cl #quickWeapon[data-tip]::after{right:auto;left:0}
+ .guide [data-tip]{cursor:help}
+ .guide [data-tip]::after{bottom:calc(100% + 6px);left:0}
+}
+#keys{position:absolute;left:50%;bottom:max(10px,env(safe-area-inset-bottom));transform:translateX(-50%);display:none;gap:10px;font:800 11px system-ui,'Malgun Gothic',sans-serif;color:#cfe3f0;text-shadow:0 1px 2px #000;white-space:nowrap;opacity:.85}
+#keys kbd{display:inline-block;min-width:18px;padding:1px 5px;margin-right:3px;border:1px solid #9fb4c4;border-bottom-width:2px;border-radius:4px;background:#1a2430cc;color:#fff;font:800 10.5px system-ui;text-align:center}
+@media (hover:hover) and (pointer:fine) and (min-width:760px){#keys{display:flex}}
 #music.off{color:#9ba5b0;border-color:#54606d}
 #musicMenu{border:2px solid #ffd400;border-radius:8px;background:#ffd400;color:#000;padding:8px 12px;font:800 13px system-ui,'Malgun Gothic',sans-serif;min-width:80px;cursor:pointer}
 #musicMenu.off{background:transparent;color:#a8b2bd;border-color:#67737e}
@@ -73,7 +89,6 @@ body.cl #quickWeapon{right:auto;left:max(156px,calc(env(safe-area-inset-left) + 
 #genderSel{display:flex;gap:6px}
 #genderSel button{border:1px solid #edc95b;background:#182c3b;color:#e2f5ff;padding:10px 17px;border-radius:8px;font:800 14px system-ui;cursor:pointer}
 #genderSel button.on{background:#ffd54e;color:#14212e}
-#playZombie{border:1px solid #ffe186;background:#284653;color:#f9eec1;border-radius:5px;padding:10px 14px;font:900 13px system-ui;width:100%;margin-top:11px;cursor:pointer}
 @media(max-width:420px){#quickWeapon{right:139px;width:69px;height:69px;font-size:11px}body.cl #quickWeapon{left:139px}#cover{width:110px;height:110px}#weaponCards{gap:6px}.wcard{padding:8px;min-height:126px}.wcard h3{font-size:15px}#shopInner{padding:10px}}
 
 #coverState{position:absolute;left:50%;bottom:15%;transform:translateX(-50%);background:rgba(8,20,28,.72);border:1px solid #8ccad1;padding:6px 12px;border-radius:20px;font:900 12px system-ui,'Malgun Gothic',sans-serif;color:#aef4e3;letter-spacing:1px;white-space:nowrap;opacity:0;transition:opacity .12s;text-shadow:0 1px 2px #000}
@@ -166,17 +181,22 @@ body.cl #cover{right:auto;left:max(16px,env(safe-area-inset-left))}
 <div id="hud">
   <div id="tl"><div class="lab">STAGE</div><div id="stageNo" class="num">1-1</div><div id="zone">WAREHOUSE</div><div id="life"></div></div>
   <div id="tc"><div class="lab">TIME</div><div id="time" class="num">50.00</div></div>
-  <div id="tr"><div class="lab">SCORE</div><div id="score" class="num">0</div><button id="swap" aria-label="엄폐 버튼 위치 바꾸기">⇄ 버튼 위치</button><br><button id="music" aria-label="배경음악 켜기 끄기" aria-pressed="true">♫ BGM ON</button><br><button id="armory">⚒ 무기 업그레이드</button></div>
+  <div id="tr"><div class="lab">SCORE</div><div id="score" class="num">0</div><button id="swap" aria-label="엄폐 버튼 위치 바꾸기" data-tip="엄폐 버튼을 화면 왼쪽/오른쪽으로 옮깁니다">⇄ 버튼 위치</button><br><button id="music" aria-label="배경음악 켜기 끄기" aria-pressed="true" data-tip="배경음악 켜기/끄기  [M]">♫ BGM ON</button><br><button id="armory" data-tip="무기 해금·강화 (게임 일시정지)  [E]
+닫기  [E] 또는 [Esc]">⚒ 무기 업그레이드</button></div>
   <div id="bossbar"><div class="lab" id="bossLabel" style="text-align:center;margin-bottom:3px">COMMANDER</div><div class="bg"><div id="bossFill"></div></div></div>
   <div id="bl"><div id="weaponName">PISTOL</div><div id="ammoCount">6 / 6</div><div id="ammo"></div></div>
   <div id="banner"><div class="b1" id="bn1">STAGE 1</div><div class="b2" id="bn2">WAREHOUSE</div><div class="b3" id="bn3"></div></div>
   <div id="msg"></div><div id="sub"></div>
   <div id="reloadTip">RELOAD!</div>
-  <div id="coverState">엄폐 중</div><div id="reloadUI"><label id="reloadLabel">RELOADING</label><div id="reloadTrack"><div id="reloadFill"></div></div></div><div id="guard"></div><div id="chapterBadge">CHAPTER 1 · KRS BLACKSITE</div>
+  <div id="coverState">엄폐 중</div><div id="reloadUI"><label id="reloadLabel">RELOADING</label><div id="reloadTrack"><div id="reloadFill"></div></div></div><div id="guard"></div><div id="keys"><span><kbd>클릭</kbd>사격</span><span><kbd>Space</kbd>/<kbd>우클릭</kbd>엄폐·장전</span><span><kbd>Q</kbd>/<kbd>휠</kbd>무기 교체</span><span><kbd>1</kbd>~<kbd>4</kbd>무기 선택</span><span><kbd>E</kbd>무기고</span><span><kbd>M</kbd>BGM</span></div><div id="chapterBadge">CHAPTER 1 · KRS BLACKSITE</div>
 </div>
 <div id="flash"></div>
 <div id="reticle"></div>
-<button id="cover">COVER<small>엄폐 · 장전</small></button><button id="quickWeapon"><strong>🔫</strong>WEAPON<small>무기 변경</small></button>
+<button id="cover" data-tip="누르고 있는 동안 엄폐
+엄폐 중 1~2초 유지하면 자동 장전
+단축키  [Space] 또는 마우스 오른쪽">COVER<small>엄폐 · 장전</small></button><button id="quickWeapon" data-tip="보유 무기 순환 교체
+[Q] 또는 마우스 휠
+[1] 권총  [2] 소총  [3] 샷건  [4] 로켓"><strong>🔫</strong>WEAPON<small>무기 변경</small></button>
 <div id="fade"></div><div id="cinematic"><div class="storyhead">KRS FILE // PROJECT OUTBREAK</div><div class="skyBeam"></div><div id="chopper">🚁</div><div class="storyText" id="storyText">격리 실패. 바이러스가 외부로 유출되었다.</div></div><div id="shop"><div id="shopInner"><div id="shopHead"><h2>⚒ ARMORY</h2><button id="shopClose">✕ 닫기</button></div><p>획득 점수로 무기를 해금하고 업그레이드합니다. 무기는 언제든 교체할 수 있습니다.</p><div id="weaponToken"></div><div id="weaponCards"></div></div></div>
 <div id="overlay"><div id="panel">
   <div class="logo">LAST<b>COVER</b></div>
@@ -184,81 +204,16 @@ body.cl #cover{right:auto;left:max(16px,env(safe-area-inset-left))}
   <p id="desc">KRS 연구소의 생물학 실험을 저지하라. 옥상 탈출 뒤 헬기가 피격되고, 생존자들은 좀비 사태에 직면한다. 엄폐하며 장전하고 무기를 획득해 돌파하라!</p>
   <div class="guide">
     <div><b>사격</b>적을 터치 · 마우스 왼쪽</div>
-    <div><b>엄폐 · 장전</b>누르고 있기 · 스페이스 (1~2초)</div>
-    <div><b>무기 교체</b>WEAPON · 숫자 1~4</div>
+    <div data-tip="엄폐 중에는 적 총알을 막습니다.
+탄이 줄어든 상태로 1~2초 버티면 자동 장전."><b>엄폐 · 장전</b>누르고 있기 · 스페이스 · 우클릭</div>
+    <div data-tip="[Q] / 휠 : 다음 무기
+[1] 권총  [2] 소총  [3] 샷건  [4] 로켓
+[E] 무기고 열기 (해금·강화)"><b>무기 교체</b>WEAPON · Q · 휠 · 숫자 1~4</div>
     <div><b>좀비 보스</b>왼쪽 다리 → 오른쪽 다리 → 머리</div>
   </div>
   <div class="side"><span>엄폐 버튼 위치</span><div class="seg" role="group" aria-label="엄폐 버튼 위치"><button data-s="left">왼쪽</button><button data-s="right">오른쪽</button></div></div>
-  <div class="side"><span>캐릭터 선택</span><div id="genderSel"><button data-g="male" class="on">♂ 남자</button><button data-g="female">♀ 여자</button></div></div><div id="agentCards"><button type="button" class="agent-card on" data-g="male" aria-label="남자 캐릭터 선택">
-<svg viewBox="0 0 160 218" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
- <defs><linearGradient id="coat-male" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#71c1c8"/><stop offset=".85" stop-color="#346f83"/></linearGradient><linearGradient id="visor-male" x1="0" y1="0" x2="1" y2=".5"><stop stop-color="#b5e8f0" stop-opacity=".72"/><stop offset="1" stop-color="#4a9ab4" stop-opacity=".24"/></linearGradient></defs>
- <circle cx="80" cy="74" r="63" fill="none" stroke="#71c1c8" stroke-opacity=".26" stroke-width="1.5"/>
- <ellipse cx="80" cy="205" rx="53" ry="8" fill="#050c16" opacity=".48"/>
- <!-- Short boots and combat trousers -->
- <path d="M59 159L55 190L75 190L81 168L86 190L107 190L101 159" fill="#293642" stroke="#14212c" stroke-width="4" stroke-linejoin="round"/>
- <path d="M56 183L75 183L75 207L47 207L46 198Q48 191 56 183ZM87 183L107 183L116 198L117 207L84 207L84 192Z" fill="#26303a" stroke="#131920" stroke-width="3"/>
- <path d="M48 204H75M86 204H116" stroke="#778b96" stroke-width="2"/>
- <!-- Tactical jacket, not a hoodie -->
- <path d="M52 127Q44 133 43 148L42 159Q55 176 80 176Q108 176 117 159L117 147Q116 132 107 127Z" fill="url(#coat-male)" stroke="#1a2936" stroke-width="3"/>
- <path d="M54 139L31 168L43 177L61 163ZM105 139L128 168L116 177L99 163Z" fill="#346f83" stroke="#182632" stroke-width="3"/>
- <path d="M29 167L39 164L48 173L41 182L32 180Z M121 165L130 168L129 179L119 182L112 174Z" fill="#343943"/>
- <path d="M63 143H97L101 163H58Z" fill="#263d4d" stroke="#19222f" stroke-width="2"/>
- <path d="M64 146H96M67 159H92" stroke="#7198a6" stroke-width="2"/>
- <path d="M67 134H94" stroke="#ffe36e" stroke-width="4" stroke-linecap="round"/>
- <path d="M56 145L61 171M105 145L100 171" stroke="#273444" stroke-width="6"/>
- <path d="M80 142V171" stroke="#222d37" stroke-width="2"/>
- <!-- Large SD face and visible short hair -->
- <ellipse cx="80" cy="75" rx="52" ry="57" fill="#eec4a6" stroke="#785d56" stroke-width="2"/>
- <path d="M30 73Q19 19 67 16Q98 6 120 40Q131 58 125 77Q121 47 108 42Q91 44 77 29Q68 50 49 44Q37 54 30 73Z" fill="#28343d" stroke="#1a252d" stroke-width="3"/>
- <path d="M41 35Q72 15 91 30Q74 43 52 49Z" fill="#28343d"/>
- <path d="M33 71L42 68M118 68L126 71" stroke="#25303d" stroke-width="5" stroke-linecap="round"/>
- <!-- Expressive eyes remain visible behind close-fitting sport goggles -->
- <ellipse cx="61" cy="80" rx="8" ry="11" fill="#fff5e6"/><ellipse cx="99" cy="80" rx="8" ry="11" fill="#fff5e6"/>
- <ellipse cx="62" cy="83" rx="5" ry="8" fill="#24323d"/><ellipse cx="98" cy="83" rx="5" ry="8" fill="#24323d"/>
- <circle cx="64" cy="79" r="2.5" fill="white"/><circle cx="100" cy="79" r="2.5" fill="white"/>
- <ellipse cx="45" cy="99" rx="9" ry="5" fill="#ed9fa0" opacity=".38"/><ellipse cx="115" cy="99" rx="9" ry="5" fill="#ed9fa0" opacity=".38"/>
- <path d="M74 111Q80 116 86 111" fill="none" stroke="#815d57" stroke-width="2" stroke-linecap="round"/>
- <rect x="43" y="70" width="34" height="18" rx="9" fill="url(#visor-male)" stroke="#253843" stroke-width="3"/>
- <rect x="83" y="70" width="34" height="18" rx="9" fill="url(#visor-male)" stroke="#253843" stroke-width="3"/>
- <path d="M76 78Q80 75 84 78" fill="none" stroke="#253843" stroke-width="3"/>
- <path d="M33 75L45 76M115 76L127 75" stroke="#253843" stroke-width="4"/>
- 
- </svg><b>MALE AGENT</b><small>SD 요원 · 밀착형 고글</small></button><button type="button" class="agent-card" data-g="female" aria-label="여자 캐릭터 선택">
-<svg viewBox="0 0 160 218" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
- <defs><linearGradient id="coat-female" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d48da8"/><stop offset=".85" stop-color="#8a5876"/></linearGradient><linearGradient id="visor-female" x1="0" y1="0" x2="1" y2=".5"><stop stop-color="#b5e8f0" stop-opacity=".72"/><stop offset="1" stop-color="#4a9ab4" stop-opacity=".24"/></linearGradient></defs>
- <circle cx="80" cy="74" r="63" fill="none" stroke="#d48da8" stroke-opacity=".26" stroke-width="1.5"/>
- <ellipse cx="80" cy="205" rx="53" ry="8" fill="#050c16" opacity=".48"/>
- <!-- Short boots and combat trousers -->
- <path d="M59 159L55 190L75 190L81 168L86 190L107 190L101 159" fill="#293642" stroke="#14212c" stroke-width="4" stroke-linejoin="round"/>
- <path d="M56 183L75 183L75 207L47 207L46 198Q48 191 56 183ZM87 183L107 183L116 198L117 207L84 207L84 192Z" fill="#26303a" stroke="#131920" stroke-width="3"/>
- <path d="M48 204H75M86 204H116" stroke="#778b96" stroke-width="2"/>
- <!-- Tactical jacket, not a hoodie -->
- <path d="M52 127Q44 133 43 148L42 159Q55 176 80 176Q108 176 117 159L117 147Q116 132 107 127Z" fill="url(#coat-female)" stroke="#1a2936" stroke-width="3"/>
- <path d="M54 139L31 168L43 177L61 163ZM105 139L128 168L116 177L99 163Z" fill="#8a5876" stroke="#182632" stroke-width="3"/>
- <path d="M29 167L39 164L48 173L41 182L32 180Z M121 165L130 168L129 179L119 182L112 174Z" fill="#343943"/>
- <path d="M63 143H97L101 163H58Z" fill="#263d4d" stroke="#19222f" stroke-width="2"/>
- <path d="M64 146H96M67 159H92" stroke="#7198a6" stroke-width="2"/>
- <path d="M67 134H94" stroke="#f5baca" stroke-width="4" stroke-linecap="round"/>
- <path d="M56 145L61 171M105 145L100 171" stroke="#273444" stroke-width="6"/>
- <path d="M80 142V171" stroke="#222d37" stroke-width="2"/>
- <!-- Large SD face and visible short hair -->
- <ellipse cx="80" cy="75" rx="52" ry="57" fill="#eec4a6" stroke="#785d56" stroke-width="2"/>
- <path d="M30 73Q19 19 67 16Q98 6 120 40Q131 58 125 77Q121 47 108 42Q91 44 77 29Q68 50 49 44Q37 54 30 73Z" fill="#423238" stroke="#1a252d" stroke-width="3"/>
- <path d="M41 35Q72 15 91 30Q74 43 52 49Z" fill="#423238"/>
- <path d="M33 71L42 68M118 68L126 71" stroke="#25303d" stroke-width="5" stroke-linecap="round"/>
- <!-- Expressive eyes remain visible behind close-fitting sport goggles -->
- <ellipse cx="61" cy="80" rx="8" ry="11" fill="#fff5e6"/><ellipse cx="99" cy="80" rx="8" ry="11" fill="#fff5e6"/>
- <ellipse cx="62" cy="83" rx="5" ry="8" fill="#24323d"/><ellipse cx="98" cy="83" rx="5" ry="8" fill="#24323d"/>
- <circle cx="64" cy="79" r="2.5" fill="white"/><circle cx="100" cy="79" r="2.5" fill="white"/>
- <ellipse cx="45" cy="99" rx="9" ry="5" fill="#ed9fa0" opacity=".38"/><ellipse cx="115" cy="99" rx="9" ry="5" fill="#ed9fa0" opacity=".38"/>
- <path d="M74 111Q80 116 86 111" fill="none" stroke="#815d57" stroke-width="2" stroke-linecap="round"/>
- <rect x="43" y="70" width="34" height="18" rx="9" fill="url(#visor-female)" stroke="#253843" stroke-width="3"/>
- <rect x="83" y="70" width="34" height="18" rx="9" fill="url(#visor-female)" stroke="#253843" stroke-width="3"/>
- <path d="M76 78Q80 75 84 78" fill="none" stroke="#253843" stroke-width="3"/>
- <path d="M33 75L45 76M115 76L127 75" stroke="#253843" stroke-width="4"/>
- <path d="M125 89Q141 113 127 138Q116 138 116 124L120 92Z" fill="#423238" stroke="#1a252d" stroke-width="3"/>
- </svg><b>FEMALE AGENT</b><small>SD 요원 · 밀착형 고글</small></button></div><div class="side"><span>액션 배경음악 (실시간 합성)</span><button id="musicMenu" aria-label="배경음악 설정" aria-pressed="true">♫ 켜짐</button></div>
-  <button id="play">▶ 처음부터 플레이</button><button id="playZombie">☣ 좀비 챕터부터 시작 (테스트)</button>
+  <div class="side"><span>캐릭터 선택</span><div id="genderSel"><button data-g="male" class="on">♂ 남자</button><button data-g="female">♀ 여자</button></div></div><div id="agentCards"><button type="button" class="agent-card on" data-g="male" aria-label="남자 캐릭터 선택" aria-pressed="true"><svg viewBox="0 0 160 218" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><radialGradient id="bg-male" cx=".5" cy=".38" r=".6"><stop stop-color="#5fd0e0" stop-opacity=".35"/><stop offset="1" stop-color="#5fd0e0" stop-opacity="0"/></radialGradient><linearGradient id="jk-male" x1="0" y1="0" x2=".3" y2="1"><stop stop-color="#3f97ad"/><stop offset="1" stop-color="#1f5468"/></linearGradient><linearGradient id="hr-male" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#33405a"/><stop offset="1" stop-color="#141b2b"/></linearGradient><linearGradient id="ir-male" x1="0" y1="0" x2="0" y2="1"><stop offset=".1" stop-color="#0f4a5c"/><stop offset="1" stop-color="#45d6e6"/></linearGradient><linearGradient id="ln-male" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe27a"/><stop offset="1" stop-color="#ff7a2e"/></linearGradient><linearGradient id="sk-male" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffe3cf"/><stop offset="1" stop-color="#f6c2a4"/></linearGradient></defs><circle cx="80" cy="84" r="74" fill="url(#bg-male)"/><path d="M80 14l58 33v66l-58 33-58-33V47z" fill="none" stroke="#5fd0e0" stroke-opacity=".22" stroke-width="1.5"/><ellipse cx="80" cy="208" rx="46" ry="6" fill="#02060c" opacity=".55"/><path d="M60 176L58 196H77L79 180ZM81 180L83 196H102L100 176Z" fill="#2a3442" stroke="#1b1a26" stroke-width="2.4" stroke-linejoin="round"/><rect x="60" y="184" width="15" height="7" rx="3" fill="#4f6675"/><rect x="85" y="184" width="15" height="7" rx="3" fill="#4f6675"/><path d="M55 196H78V206Q78 209 75 209H52Q49 209 50 205Q51 198 55 196ZM82 196H105Q109 198 110 205Q111 209 108 209H85Q82 209 82 206Z" fill="#20262f" stroke="#1b1a26" stroke-width="2.4" stroke-linejoin="round"/><path d="M51 206H77M83 206H109" stroke="#7d8f99" stroke-width="2"/><rect x="96" y="172" width="11" height="15" rx="3" fill="#1c2430" stroke="#1b1a26" stroke-width="1.8"/><path d="M50 138Q36 146 35 168L44 170Q46 154 52 150Z" fill="url(#jk-male)" stroke="#1b1a26" stroke-width="2.4" stroke-linejoin="round"/><path d="M44 160L35 158" stroke="#ffd23f" stroke-width="3"/><circle cx="39" cy="174" r="7" fill="#2b313b" stroke="#1b1a26" stroke-width="2.2"/><path d="M110 138Q124 146 125 168L116 170Q114 154 108 150Z" fill="url(#jk-male)" stroke="#1b1a26" stroke-width="2.4" stroke-linejoin="round"/><path d="M116 160L125 158" stroke="#ffd23f" stroke-width="3"/><circle cx="121" cy="174" r="7" fill="#2b313b" stroke="#1b1a26" stroke-width="2.2"/><path d="M50 140Q52 132 64 130H96Q108 132 110 140L106 166Q108 178 104 182H56Q52 178 54 166Z" fill="url(#jk-male)" stroke="#1b1a26" stroke-width="2.6" stroke-linejoin="round"/><path d="M60 142H100L98 170H62Z" fill="#1f2f40" stroke="#1b1a26" stroke-width="2"/><rect x="64" y="152" width="13" height="13" rx="2.5" fill="#2e4256" stroke="#141c26" stroke-width="1.5"/><rect x="83" y="152" width="13" height="13" rx="2.5" fill="#2e4256" stroke="#141c26" stroke-width="1.5"/><path d="M64 156H77M83 156H96" stroke="#5f7d92" stroke-width="1.5"/><path d="M80 142V170" stroke="#0f1620" stroke-width="1.6"/><rect x="64" y="144" width="12" height="6" rx="1.5" fill="#ffd23f"/><text x="70" y="149" font-size="4.6" font-weight="900" text-anchor="middle" fill="#1b1a26" font-family="system-ui,sans-serif">KRS</text><path d="M55 172H105" stroke="#151b24" stroke-width="5"/><rect x="76" y="169.5" width="8" height="5.5" rx="1" fill="#ffd23f"/><path d="M62 131L70 141L80 134L90 141L98 131L92 126H68Z" fill="#1f5468" stroke="#1b1a26" stroke-width="2.2" stroke-linejoin="round"/><path d="M70 141L80 134L90 141" fill="none" stroke="#ffd23f" stroke-width="2"/><path d="M72 120H88V132Q80 136 72 132Z" fill="#f0b996" stroke="#1b1a26" stroke-width="2"/><path d="M32 88Q22 40 62 26L58 12L76 22L88 8L96 24L114 14L112 32Q138 46 128 88Q124 100 118 104L114 92H46L42 104Q36 100 32 88Z" fill="url(#hr-male)" stroke="#1b1a26" stroke-width="2.4" stroke-linejoin="round"/><ellipse cx="35" cy="92" rx="6" ry="8" fill="#f2bf9f" stroke="#1b1a26" stroke-width="2"/><ellipse cx="125" cy="92" rx="6" ry="8" fill="#f2bf9f" stroke="#1b1a26" stroke-width="2"/><path d="M36 80Q36 118 62 126Q80 132 98 126Q124 118 124 80Q124 44 80 44Q36 44 36 80Z" fill="url(#sk-male)" stroke="#1b1a26" stroke-width="2.4"/><ellipse cx="61" cy="95" rx="10.5" ry="12.5" fill="#fffaf2"/><ellipse cx="61.5" cy="96.5" rx="8.4" ry="10.8" fill="url(#ir-male)"/><ellipse cx="61" cy="97" rx="4" ry="5.6" fill="#0d0f18"/><ellipse cx="61" cy="103" rx="5.5" ry="2.4" fill="#45d6e6" opacity=".55"/><circle cx="58" cy="91" r="3.2" fill="#fff"/><circle cx="64.6" cy="101" r="1.5" fill="#fff"/><path d="M72 90Q63 81 50 87" fill="none" stroke="#1b1a26" stroke-width="3.8" stroke-linecap="round"/><path d="M71 74L52 78" fill="none" stroke="#141b2b" stroke-width="3.6" stroke-linecap="round"/><ellipse cx="47" cy="111" rx="7" ry="3.6" fill="#ff8c9a" opacity=".42"/><ellipse cx="99" cy="95" rx="10.5" ry="12.5" fill="#fffaf2"/><ellipse cx="98.5" cy="96.5" rx="8.4" ry="10.8" fill="url(#ir-male)"/><ellipse cx="99" cy="97" rx="4" ry="5.6" fill="#0d0f18"/><ellipse cx="99" cy="103" rx="5.5" ry="2.4" fill="#45d6e6" opacity=".55"/><circle cx="96" cy="91" r="3.2" fill="#fff"/><circle cx="102.6" cy="101" r="1.5" fill="#fff"/><path d="M88 90Q97 81 110 87" fill="none" stroke="#1b1a26" stroke-width="3.8" stroke-linecap="round"/><path d="M89 74L108 78" fill="none" stroke="#141b2b" stroke-width="3.6" stroke-linecap="round"/><ellipse cx="113" cy="111" rx="7" ry="3.6" fill="#ff8c9a" opacity=".42"/><path d="M80 106l-1.6 2.6h3" fill="none" stroke="#c98e78" stroke-width="1.4" stroke-linecap="round"/><path d="M73 115Q80 117 87 112" fill="none" stroke="#1b1a26" stroke-width="2" stroke-linecap="round"/><path d="M71 117l2 -2" stroke="#1b1a26" stroke-width="1.4"/><rect x="104" y="100" width="10" height="5" rx="1.5" transform="rotate(-18 109 102)" fill="#f7e3c6" stroke="#b79c7e" stroke-width="1"/><path d="M34 86Q30 48 62 40Q80 34 100 40Q130 48 126 86L120 70L116 80L110 62L102 76L98 58L88 72L82 54L74 72L66 56L60 74L52 60L48 78L42 68Z" fill="url(#hr-male)" stroke="#1b1a26" stroke-width="2.4" stroke-linejoin="round"/><path d="M56 48Q70 40 88 44" fill="none" stroke="#6d84aa" stroke-width="2.4" stroke-linecap="round" opacity=".8"/><path d="M34 64Q80 40 126 64" fill="none" stroke="#1d2531" stroke-width="6" stroke-linecap="round"/><g transform="rotate(-8 64 52)"><rect x="51" y="43" width="26" height="17" rx="8" fill="#2a3340" stroke="#1b1a26" stroke-width="2.2"/><rect x="54" y="46" width="20" height="11" rx="5.5" fill="url(#ln-male)"/><path d="M57 49.5l6 -1.6" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".85"/></g><g transform="rotate(8 96 52)"><rect x="83" y="43" width="26" height="17" rx="8" fill="#2a3340" stroke="#1b1a26" stroke-width="2.2"/><rect x="86" y="46" width="20" height="11" rx="5.5" fill="url(#ln-male)"/><path d="M89 49.5l6 -1.6" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".85"/></g><rect x="76" y="47" width="8" height="5" rx="2" fill="#2a3340" stroke="#1b1a26" stroke-width="1.6"/><path d="M30 92h-4v10" fill="none" stroke="#1d2531" stroke-width="2.4" stroke-linecap="round"/><circle cx="26" cy="104" r="2.4" fill="#ffd23f"/></svg><b>MALE AGENT</b><small>돌격 요원 · 스파이크 헤어</small></button><button type="button" class="agent-card" data-g="female" aria-label="여자 캐릭터 선택" aria-pressed="false"><svg viewBox="0 0 160 218" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><radialGradient id="bg-female" cx=".5" cy=".38" r=".6"><stop stop-color="#ff9cc0" stop-opacity=".35"/><stop offset="1" stop-color="#ff9cc0" stop-opacity="0"/></radialGradient><linearGradient id="jk-female" x1="0" y1="0" x2=".3" y2="1"><stop stop-color="#a5638f"/><stop offset="1" stop-color="#5b2f52"/></linearGradient><linearGradient id="hr-female" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#5a3346"/><stop offset="1" stop-color="#2a1520"/></linearGradient><linearGradient id="ir-female" x1="0" y1="0" x2="0" y2="1"><stop offset=".1" stop-color="#5a2d6e"/><stop offset="1" stop-color="#d58cff"/></linearGradient><linearGradient id="ln-female" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#9ff3ff"/><stop offset="1" stop-color="#2aa7c9"/></linearGradient><linearGradient id="sk-female" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffe3cf"/><stop offset="1" stop-color="#f6c2a4"/></linearGradient></defs><circle cx="80" cy="84" r="74" fill="url(#bg-female)"/><path d="M80 14l58 33v66l-58 33-58-33V47z" fill="none" stroke="#ff9cc0" stroke-opacity=".22" stroke-width="1.5"/><ellipse cx="80" cy="208" rx="46" ry="6" fill="#02060c" opacity=".55"/><path d="M106 40Q146 30 150 72Q153 112 128 146Q134 112 128 92Q122 70 104 56Z" fill="url(#hr-female)" stroke="#1b1a26" stroke-width="2.4" stroke-linejoin="round"/><path d="M134 62Q142 90 134 120" fill="none" stroke="#9a6080" stroke-width="2" stroke-linecap="round" opacity=".7"/><path d="M60 176L58 196H77L79 180ZM81 180L83 196H102L100 176Z" fill="#2a3442" stroke="#1b1a26" stroke-width="2.4" stroke-linejoin="round"/><rect x="60" y="184" width="15" height="7" rx="3" fill="#4f6675"/><rect x="85" y="184" width="15" height="7" rx="3" fill="#4f6675"/><path d="M55 196H78V206Q78 209 75 209H52Q49 209 50 205Q51 198 55 196ZM82 196H105Q109 198 110 205Q111 209 108 209H85Q82 209 82 206Z" fill="#20262f" stroke="#1b1a26" stroke-width="2.4" stroke-linejoin="round"/><path d="M51 206H77M83 206H109" stroke="#7d8f99" stroke-width="2"/><rect x="96" y="172" width="11" height="15" rx="3" fill="#1c2430" stroke="#1b1a26" stroke-width="1.8"/><path d="M50 138Q36 146 35 168L44 170Q46 154 52 150Z" fill="url(#jk-female)" stroke="#1b1a26" stroke-width="2.4" stroke-linejoin="round"/><path d="M44 160L35 158" stroke="#ffb8cc" stroke-width="3"/><circle cx="39" cy="174" r="7" fill="#2b313b" stroke="#1b1a26" stroke-width="2.2"/><path d="M110 138Q124 146 125 168L116 170Q114 154 108 150Z" fill="url(#jk-female)" stroke="#1b1a26" stroke-width="2.4" stroke-linejoin="round"/><path d="M116 160L125 158" stroke="#ffb8cc" stroke-width="3"/><circle cx="121" cy="174" r="7" fill="#2b313b" stroke="#1b1a26" stroke-width="2.2"/><path d="M50 140Q52 132 64 130H96Q108 132 110 140L102 166Q104 178 104 182H56Q56 178 58 166Z" fill="url(#jk-female)" stroke="#1b1a26" stroke-width="2.6" stroke-linejoin="round"/><path d="M60 142H100L98 170H62Z" fill="#1f2f40" stroke="#1b1a26" stroke-width="2"/><rect x="64" y="152" width="13" height="13" rx="2.5" fill="#2e4256" stroke="#141c26" stroke-width="1.5"/><rect x="83" y="152" width="13" height="13" rx="2.5" fill="#2e4256" stroke="#141c26" stroke-width="1.5"/><path d="M64 156H77M83 156H96" stroke="#5f7d92" stroke-width="1.5"/><path d="M80 142V170" stroke="#0f1620" stroke-width="1.6"/><rect x="64" y="144" width="12" height="6" rx="1.5" fill="#ffb8cc"/><text x="70" y="149" font-size="4.6" font-weight="900" text-anchor="middle" fill="#1b1a26" font-family="system-ui,sans-serif">KRS</text><path d="M55 172H105" stroke="#151b24" stroke-width="5"/><rect x="76" y="169.5" width="8" height="5.5" rx="1" fill="#ffb8cc"/><path d="M62 131L70 141L80 134L90 141L98 131L92 126H68Z" fill="#5b2f52" stroke="#1b1a26" stroke-width="2.2" stroke-linejoin="round"/><path d="M70 141L80 134L90 141" fill="none" stroke="#ffb8cc" stroke-width="2"/><path d="M72 120H88V132Q80 136 72 132Z" fill="#f0b996" stroke="#1b1a26" stroke-width="2"/><path d="M30 86Q24 36 80 28Q136 36 130 86Q134 116 124 134Q114 120 114 96H46Q46 120 36 134Q26 116 30 86Z" fill="url(#hr-female)" stroke="#1b1a26" stroke-width="2.4" stroke-linejoin="round"/><ellipse cx="35" cy="92" rx="6" ry="8" fill="#f2bf9f" stroke="#1b1a26" stroke-width="2"/><ellipse cx="125" cy="92" rx="6" ry="8" fill="#f2bf9f" stroke="#1b1a26" stroke-width="2"/><path d="M36 80Q36 118 62 126Q80 132 98 126Q124 118 124 80Q124 44 80 44Q36 44 36 80Z" fill="url(#sk-female)" stroke="#1b1a26" stroke-width="2.4"/><ellipse cx="61" cy="95" rx="10.5" ry="12.5" fill="#fffaf2"/><ellipse cx="61.5" cy="96.5" rx="8.4" ry="10.8" fill="url(#ir-female)"/><ellipse cx="61" cy="97" rx="4" ry="5.6" fill="#0d0f18"/><ellipse cx="61" cy="103" rx="5.5" ry="2.4" fill="#d58cff" opacity=".55"/><circle cx="58" cy="91" r="3.2" fill="#fff"/><circle cx="64.6" cy="101" r="1.5" fill="#fff"/><path d="M72 92Q65 80 50 86L46 82" fill="none" stroke="#1b1a26" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M71 88Q63 78 51 84" fill="none" stroke="#1b1a26" stroke-width="1.2" opacity=".6"/><path d="M70 76Q61 71 52 75" fill="none" stroke="#2a1520" stroke-width="2.2" stroke-linecap="round"/><ellipse cx="47" cy="111" rx="7" ry="3.6" fill="#ff8c9a" opacity=".42"/><ellipse cx="99" cy="95" rx="10.5" ry="12.5" fill="#fffaf2"/><ellipse cx="98.5" cy="96.5" rx="8.4" ry="10.8" fill="url(#ir-female)"/><ellipse cx="99" cy="97" rx="4" ry="5.6" fill="#0d0f18"/><ellipse cx="99" cy="103" rx="5.5" ry="2.4" fill="#d58cff" opacity=".55"/><circle cx="96" cy="91" r="3.2" fill="#fff"/><circle cx="102.6" cy="101" r="1.5" fill="#fff"/><path d="M88 92Q95 80 110 86L114 82" fill="none" stroke="#1b1a26" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M89 88Q97 78 109 84" fill="none" stroke="#1b1a26" stroke-width="1.2" opacity=".6"/><path d="M90 76Q99 71 108 75" fill="none" stroke="#2a1520" stroke-width="2.2" stroke-linecap="round"/><ellipse cx="113" cy="111" rx="7" ry="3.6" fill="#ff8c9a" opacity=".42"/><path d="M80 106l-1.6 2.6h3" fill="none" stroke="#c98e78" stroke-width="1.4" stroke-linecap="round"/><path d="M73 114Q80 122 87 114Q80 116 73 114Z" fill="#c4505f" stroke="#1b1a26" stroke-width="1.6" stroke-linejoin="round"/><path d="M34 84Q30 50 60 40Q80 32 100 40Q128 48 126 84Q120 66 112 62Q108 76 98 80Q100 66 94 58Q86 72 70 78Q78 68 76 58Q62 72 46 74Q50 66 50 60Q40 70 34 84Z" fill="url(#hr-female)" stroke="#1b1a26" stroke-width="2.4" stroke-linejoin="round"/><path d="M36 70Q26 104 36 132Q44 116 46 90Q44 78 36 70Z" fill="url(#hr-female)" stroke="#1b1a26" stroke-width="2.2" stroke-linejoin="round"/><path d="M124 70Q134 104 124 132Q116 116 114 90Q116 78 124 70Z" fill="url(#hr-female)" stroke="#1b1a26" stroke-width="2.2" stroke-linejoin="round"/><path d="M58 50Q72 42 90 46" fill="none" stroke="#9a6080" stroke-width="2.4" stroke-linecap="round" opacity=".8"/><path d="M112 40L100 30L104 46ZM112 40L124 30L122 47Z" fill="#ffb8cc" stroke="#1b1a26" stroke-width="1.8" stroke-linejoin="round"/><circle cx="112" cy="40" r="4" fill="#ff7fa6" stroke="#1b1a26" stroke-width="1.6"/><path d="M34 64Q80 40 126 64" fill="none" stroke="#1d2531" stroke-width="6" stroke-linecap="round"/><g transform="rotate(-8 64 52)"><rect x="51" y="43" width="26" height="17" rx="8" fill="#2a3340" stroke="#1b1a26" stroke-width="2.2"/><rect x="54" y="46" width="20" height="11" rx="5.5" fill="url(#ln-female)"/><path d="M57 49.5l6 -1.6" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".85"/></g><g transform="rotate(8 96 52)"><rect x="83" y="43" width="26" height="17" rx="8" fill="#2a3340" stroke="#1b1a26" stroke-width="2.2"/><rect x="86" y="46" width="20" height="11" rx="5.5" fill="url(#ln-female)"/><path d="M89 49.5l6 -1.6" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".85"/></g><rect x="76" y="47" width="8" height="5" rx="2" fill="#2a3340" stroke="#1b1a26" stroke-width="1.6"/></svg><b>FEMALE AGENT</b><small>정찰 요원 · 하이 포니테일</small></button></div><div class="side"><span>액션 배경음악 (실시간 합성)</span><button id="musicMenu" aria-label="배경음악 설정" aria-pressed="true">♫ 켜짐</button></div>
+  <button id="play">▶ 처음부터 플레이</button>
   <div id="note">세로 화면 권장 · 권총 기본 지급 · 로켓 런처는 소모성 3발 · Three.js 최초 로딩 시 인터넷 필요</div>
 </div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -508,15 +463,15 @@ const STYLE={
 const SG=(r,ws=18,hs=14,tl=Math.PI)=>new THREE.SphereGeometry(r,ws,hs,0,Math.PI*2,0,tl);
 const CG=(r1,r2,h,seg=14)=>new THREE.CylinderGeometry(r1,r2,h,seg);
 const BG=(w,h,d)=>new THREE.BoxGeometry(w,h,d);
-function part(par,geo,mat,x,y,z,o={}){const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);if(o.s)m.scale.set(...o.s);if(o.r)m.rotation.set(...o.r);m.castShadow=o.cast!==false;m.userData.head=!!o.head;if(o.weakpart)m.userData.weakpart=o.weakpart;par.add(m);return m}
+function part(par,geo,mat,x,y,z,o={}){const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);if(o.s)m.scale.set(...o.s);if(o.r)m.rotation.set(...o.r);m.castShadow=o.cast!==false;if(o.ol===false||(o.cast===false&&o.ol!==true))m.userData.noOL=true;m.userData.head=!!o.head;if(o.weakpart)m.userData.weakpart=o.weakpart;par.add(m);return m}
 const share=m=>{m.userData.shared=true;return m};
-const skinM=share(M({color:'#ffd9bf',roughness:.75})),inkM=share(new THREE.MeshBasicMaterial({color:'#1a1a22'})),whiteM=share(new THREE.MeshBasicMaterial({color:'#ffffff'})),blushM=share(new THREE.MeshBasicMaterial({color:'#ff8fa0',transparent:true,opacity:.65})),gunM=share(M({color:'#23262c',roughness:.45,metalness:.55})),bootM=share(M({color:'#2b2622',roughness:.9}));
+const skinM=share(M({color:new THREE.Color('#ffd9bf').convertSRGBToLinear(),roughness:.75})),inkM=share(new THREE.MeshBasicMaterial({color:'#1a1a22'})),whiteM=share(new THREE.MeshBasicMaterial({color:'#ffffff'})),blushM=share(new THREE.MeshBasicMaterial({color:'#ff8fa0',transparent:true,opacity:.65})),gunM=share(M({color:'#23262c',roughness:.45,metalness:.55})),bootM=share(M({color:'#2b2622',roughness:.9}));
 const flashMat=share(new THREE.SpriteMaterial({map:glowTex,blending:THREE.AdditiveBlending,depthWrite:false,transparent:true,fog:false}));
 const markerMat=share(new THREE.SpriteMaterial({map:ringTex,depthTest:false,depthWrite:false,transparent:true,fog:false}));
 const EM={};
 function chibi(type){
   const s=STYLE[type],undead=type==='zombie'||type==='runner'||type==='zboss';
-  const m=EM[type]||(EM[type]={suit:share(M({color:s.suit,roughness:.75})),vest:share(M({color:s.vest,roughness:.55,metalness:.2})),helm:share(M({color:s.helm,roughness:.4,metalness:.25}))});
+  const m=EM[type]||(EM[type]={suit:share(M({color:new THREE.Color(s.suit).convertSRGBToLinear(),roughness:.75})),vest:share(M({color:new THREE.Color(s.vest).convertSRGBToLinear(),roughness:.55,metalness:.2})),helm:share(M({color:new THREE.Color(s.helm).convertSRGBToLinear(),roughness:.4,metalness:.25}))});
   const root=new THREE.Group(),pivot=new THREE.Group();root.add(pivot);
   const legL=new THREE.Group(),legR=new THREE.Group();legL.position.set(-.13,.34,0);legR.position.set(.13,.34,0);pivot.add(legL,legR);
   for(const [i,L] of [legL,legR].entries()){const weak=type==='zboss'?(i===0?'left':'right'):undefined;part(L,CG(undead?.135:.1,.09,.28),m.suit,0,-.14,0,{weakpart:weak});part(L,SG(.12,12,8),bootM,0,-.29,.04,{s:[1,.6,1.35],weakpart:weak})}
@@ -547,91 +502,151 @@ function chibi(type){
   const gun=new THREE.Group();gun.position.set(.03,.74,.44);pivot.add(gun);
   part(gun,BG(.09,.13,.44),gunM,0,0,.1);part(gun,BG(.06,.15,.08),gunM,0,-.12,-.02);part(gun,CG(.026,.026,.14,8),gunM,0,.02,.38,{r:[Math.PI/2,0,0]});
   const fl=new THREE.Sprite(flashMat);fl.scale.setScalar(.6);fl.position.set(0,.02,.5);fl.visible=false;gun.add(fl);
+  inkOutline(root);
   root.scale.setScalar(s.sc);
   return{root,pivot,legL,legR,H,flash:fl};
 }
-/* player v5.2: expressive big-head SD KRS agent, matching enemy chibi scale.
-   No hoodie or hood; wrap-around sport goggles sit flush with the face. */
+/* player v5.3: cel-shaded SD KRS agent with ink outlines.
+   Goggles sit pushed up on the forehead so the eyes stay readable; silhouette is built for the
+   over-the-shoulder camera (spiky crown + nape for male, high swinging ponytail for female). */
+const TOON_GRAD=(()=>{const d=new Uint8Array([78,78,78,255,150,150,150,255,214,214,214,255]);const t=new THREE.DataTexture(d,3,1,THREE.RGBAFormat);t.minFilter=t.magFilter=THREE.NearestFilter;t.generateMipmaps=false;t.needsUpdate=true;return t})();
+const LIN=c=>new THREE.Color(c).convertSRGBToLinear(); // author colours in sRGB, renderer outputs sRGB
+const Toon=(c,o={})=>share(new THREE.MeshToonMaterial(Object.assign({gradientMap:TOON_GRAD},o,{color:LIN(c)},o.emissive?{emissive:LIN(o.emissive)}:{})));
+// Constant-width ink outline (inverted hull pushed along view-space normals). Never raycast, never casts shadow.
+const OUTLINE=share(new THREE.ShaderMaterial({side:THREE.BackSide,uniforms:{c:{value:new THREE.Color('#15121d')},w:{value:.0046}},
+  vertexShader:'uniform float w;void main(){vec4 p=modelViewMatrix*vec4(position,1.);vec3 n=normalize(normalMatrix*normal);p.xyz+=n*w*clamp(-p.z,1.,5.5);gl_Position=projectionMatrix*p;}',
+  fragmentShader:'uniform vec3 c;void main(){gl_FragColor=vec4(c,1.);}'}));
+const OL_TYPES=/^(Sphere|Cylinder|Cone|Lathe)(Buffer)?Geometry$/;
+function inkOutline(root){const list=[];root.traverse(o=>{if(o.isMesh&&!o.userData.noOL&&!o.userData.isOL&&OL_TYPES.test(o.geometry.type))list.push(o)});
+  for(const o of list){const m=new THREE.Mesh(o.geometry,OUTLINE);m.userData.isOL=true;m.userData.keep=o.userData.keep;m.raycast=()=>{};m.castShadow=false;o.add(m)}}
+const PAL={
+  male:{jacket:'#2f8ba3',jacketDark:'#1c4f63',acc:'#ffcf3a',hair:'#2c3852',iris:'#21b9cf',lens:'#ff9a3a',lensE:'#ff6a1a'},
+  female:{jacket:'#9b5687',jacketDark:'#5a2c50',acc:'#ffa9c4',hair:'#56303f',iris:'#a45ee0',lens:'#62e3ff',lensE:'#1fb4e0'}
+};
 const PL=(()=>{
-  const jacket=share(M({color:'#346f83',roughness:.78}));
-  const dark=gunM, pants=share(M({color:'#273542',roughness:.86}));
-  const hair=share(M({color:'#302b32',roughness:.9}));
-  const skin=share(M({color:'#f1c6a9',roughness:.85}));
-  const scarf=share(M({color:'#ffce57',roughness:.65})); // badge / trim, not a scarf
-  const vest=share(M({color:'#253e50',roughness:.72,metalness:.08}));
-  const trim=share(M({color:'#8eabb6',roughness:.58,metalness:.24}));
-  const strap=share(M({color:'#1b2732',roughness:1}));
-  const goggleRim=share(M({color:'#213039',roughness:.62}));
-  const goggleGlass=share(M({color:'#92d9e8',transparent:true,opacity:.38,depthWrite:false,roughness:.24,metalness:.16}));
-  const eyeWhite=share(M({color:'#fff7e9',roughness:.72}));
-  const pupil=share(M({color:'#24313b',roughness:.38}));
-  const blush=share(M({color:'#ed9fa0',transparent:true,opacity:.48,depthWrite:false,roughness:1}));
-  const gloves=share(M({color:'#2d3540',roughness:.8}));
-  const equipment=share(M({color:'#637c80',roughness:.64,metalness:.2}));
+  const mat={
+    jacket:Toon('#2f8ba3'),jacketDark:Toon('#1c4f63'),acc:Toon('#ffcf3a'),hair:Toon('#2c3852'),
+    skin:Toon('#ffd5bb'),pants:Toon('#2a3444'),vest:Toon('#1f2d3d'),pouch:Toon('#33475a'),strap:Toon('#151c26'),
+    boot:Toon('#232a33'),sole:Toon('#8a9aa3'),glove:Toon('#2b323c'),frame:Toon('#26303c'),
+    lens:Toon('#ff9a3a',{emissive:'#ff6a1a',emissiveIntensity:.55}),led:Toon('#ff4a3a',{emissive:'#ff2a1a',emissiveIntensity:1.6}),
+    eyeW:share(new THREE.MeshBasicMaterial({color:LIN('#fffaf2')})),iris:share(new THREE.MeshBasicMaterial({color:LIN('#21b9cf')})),
+    ink:share(new THREE.MeshBasicMaterial({color:'#1a1824'})),hl:share(new THREE.MeshBasicMaterial({color:'#ffffff'})),
+    blush:share(new THREE.MeshBasicMaterial({color:LIN('#ff8c9a'),transparent:true,opacity:.5,depthWrite:false})),
+    mouth:share(new THREE.MeshBasicMaterial({color:LIN('#b84a5a')}))
+  };
+  const dark=gunM, F={cast:false,ol:false};
+  const P=(par,geo,m,x,y,z,o={})=>{const r=part(par,geo,m,x,y,z,o);if(o.ol===false||(o.cast===false&&o.ol!==true))r.userData.noOL=true;return r};
+  const UP=V(0,1,0);
+  const along=(par,geo,m,base,dir,len,o={})=>{const d=dir.clone().normalize(),r=P(par,geo,m,base.x+d.x*len/2,base.y+d.y*len/2,base.z+d.z*len/2,o);r.quaternion.setFromUnitVectors(UP,d);return r};
   const root=new THREE.Group(),pivot=new THREE.Group();root.add(pivot);
-  // Big head, small body, rounded limbs — same SD visual language as enemy models.
+  /* legs */
   const legL=new THREE.Group(),legR=new THREE.Group();
-  legL.position.set(-.17,.71,0);legR.position.set(.17,.71,0);pivot.add(legL,legR);
+  legL.position.set(-.16,.71,0);legR.position.set(.16,.71,0);pivot.add(legL,legR);
   for(const L of [legL,legR]){
-    part(L,CG(.132,.118,.42,16),pants,0,-.23,0);
-    part(L,SG(.142,16,10),pants,0,-.44,.012,{s:[.98,.72,1]});
-    part(L,SG(.154,16,10),bootM,0,-.62,.072,{s:[1,.64,1.43]});
-    part(L,BG(.285,.055,.37),gloves,0,-.68,.10);
-    part(L,BG(.07,.027,.19),equipment,0,-.64,.22,{cast:false});
+    P(L,CG(.135,.118,.30,16),mat.pants,0,-.16,0);
+    P(L,CG(.112,.128,.22,16),mat.pants,0,-.42,0);
+    P(L,SG(.095,14,10),mat.vest,0,-.33,.085,{s:[1.05,.85,.55]});           // knee pad
+    P(L,SG(.155,18,12),mat.boot,0,-.60,.07,{s:[1,.66,1.45]});
+    P(L,BG(.29,.05,.40),mat.sole,0,-.675,.09,{ol:false});
+    P(L,BG(.25,.035,.06),mat.strap,0,-.56,.20,{cast:false});
   }
-  const hips=part(pivot,SG(.28,18,12),pants,0,.70,0,{s:[1,.60,.75]});
-  const belt=part(pivot,CG(.282,.278,.075,20),strap,0,.82,0);
-  // Short tactical jacket + rigid shoulder guards. No hoodie, no hood pocket or drawstrings.
-  const torso=part(pivot,SG(.33,22,16),jacket,0,1.04,0,{s:[1.08,.96,.86]});
-  part(pivot,SG(.29,20,12),vest,0,1.03,.19,{s:[1,.85,.34]});
-  part(pivot,BG(.42,.085,.048),trim,0,1.245,.27,{cast:false});
-  part(pivot,BG(.26,.18,.055),vest,0,.92,.285);
-  part(pivot,BG(.09,.065,.025),scarf,-.12,1.11,.295,{cast:false});
-  part(pivot,BG(.15,.042,.03),trim,.10,1.12,.295,{cast:false});
-  // Back armour remains visible from the third-person camera.
-  part(pivot,BG(.41,.33,.105),vest,0,1.075,-.265);
-  part(pivot,BG(.25,.08,.025),scarf,0,1.13,-.32,{cast:false});
-  for(const sx of [-1,1]){
-    part(pivot,SG(.175,18,12),jacket,sx*.33,1.22,-.01,{s:[1.03,.75,.96]});
-    part(pivot,BG(.09,.29,.06),strap,sx*.22,1.07,-.27,{r:[0,0,sx*.08]});
-    part(pivot,BG(.105,.19,.13),equipment,sx*.29,.87,-.15);
+  /* hips, belt, pouches */
+  const hips=P(pivot,SG(.28,20,12),mat.pants,0,.70,0,{s:[1,.60,.78]});
+  const belt=P(pivot,CG(.284,.28,.07,22),mat.strap,0,.82,0,{ol:false});
+  P(pivot,BG(.085,.06,.03),mat.acc,0,.82,.27,F);
+  for(const sx of[-1,1])P(pivot,BG(.10,.12,.10),mat.pouch,sx*.25,.79,.06);
+  P(pivot,BG(.10,.15,.07),mat.strap,.27,.62,.02);                          // thigh holster
+  /* torso: jacket + chest rig + high collar */
+  const torso=P(pivot,SG(.33,24,18),mat.jacket,0,1.04,0,{s:[1.06,.98,.86]});
+  P(pivot,CG(.31,.335,.13,22),mat.jacket,0,.86,0);                         // jacket hem
+  P(pivot,SG(.29,22,14),mat.vest,0,1.03,.17,{s:[1,.84,.36]});
+  for(const sx of[-1,1]){P(pivot,BG(.105,.12,.065),mat.pouch,sx*.085,.97,.285);P(pivot,BG(.105,.03,.07),mat.vest,sx*.085,1.035,.29,F)}
+  P(pivot,BG(.11,.05,.02),mat.acc,-.12,1.15,.272,F);                       // KRS chest patch
+  P(pivot,CG(.165,.21,.12,20),mat.jacketDark,0,1.27,0);                    // collar
+  P(pivot,CG(.17,.172,.02,20),mat.acc,0,1.335,0,F);                        // collar piping
+  for(const sx of[-1,1]){
+    P(pivot,SG(.18,18,12),mat.jacket,sx*.33,1.21,-.01,{s:[1.05,.74,.98]});
+    P(pivot,BG(.065,.30,.04),mat.strap,sx*.15,1.10,.25,{r:[-.18,0,0],cast:false});
   }
-  part(pivot,CG(.12,.14,.115,16),skin,0,1.31,.01);
-  // Oversized round head (~47% of body height), dark hair, simple cute facial expression.
+  /* backpack (what the camera mostly sees) */
+  P(pivot,SG(.25,22,14),mat.vest,0,1.07,-.25,{s:[1.12,1.04,.56]});
+  P(pivot,SG(.17,18,12),mat.pouch,0,.92,-.34,{s:[1.15,.62,.55]});
+  P(pivot,BG(.15,.075,.02),mat.acc,0,1.14,-.39,F);                         // KRS patch
+  for(const sx of[-1,1])P(pivot,SG(.08,14,10),mat.pouch,sx*.25,1.0,-.27,{s:[.8,1.2,.9]});
+  P(pivot,CG(.008,.008,.44,6),mat.strap,.17,1.36,-.30,{ol:false});         // antenna
+  const led=P(pivot,SG(.026,10,8),mat.led,.17,1.59,-.30,F);
+  P(pivot,CG(.11,.13,.12,16),mat.skin,0,1.31,.01);                         // neck
+  /* head */
   const H=new THREE.Group();H.position.set(0,1.50,.014);pivot.add(H);
-  part(H,SG(.422,30,24),skin,0,0,.014,{s:[1,1.06,.96]});
-  part(H,SG(.438,26,16,Math.PI*.53),hair,0,.11,-.035,{r:[-.08,0,0]});
-  // A few tufts replace the old hood silhouette.
-  for(const [x,y,z,a] of [[-.21,.342,.193,-.28],[.015,.389,.148,.11],[.205,.346,.169,.32]]){
-    part(H,SG(.112,14,10),hair,x,y,z,{s:[1.17,.55,.75],r:[0,0,a]});
+  P(H,SG(.422,32,24),mat.skin,0,0,.014,{s:[1,1.02,.97]});
+  for(const sx of[-1,1])P(H,SG(.075,12,10),mat.skin,sx*.41,-.04,0,{s:[.5,.9,.7]});
+  const faceM=new THREE.Group(),faceF=new THREE.Group();H.add(faceM,faceF);
+  for(const sx of[-1,1]){
+    const ex=sx*.152,ey=-.035;
+    P(H,SG(.104,18,14),mat.eyeW,ex,ey,.366,{s:[.95,1.15,.16],...F});
+    P(H,SG(.083,18,14),mat.iris,ex-sx*.004,ey-.01,.378,{s:[.95,1.2,.16],...F});
+    P(H,SG(.04,12,10),mat.ink,ex,ey-.008,.387,{s:[.9,1.32,.16],...F});
+    P(H,SG(.026,10,8),mat.hl,ex-.03,ey+.045,.394,{s:[1,1,.3],...F});
+    P(H,SG(.012,8,6),mat.hl,ex+.032,ey-.055,.392,{s:[1,1,.3],...F});
+    const lash=P(H,new THREE.TorusGeometry(.104,.016,6,20,Math.PI*.82),mat.ink,ex,ey+.004,.386,{...F,s:[1,1.12,.5],r:[0,0,Math.PI*.09]});
+    lash.rotation.y=sx*.32;
+    P(faceF,BG(.06,.018,.02),mat.ink,ex+sx*.1,ey+.095,.355,{...F,r:[0,sx*.4,sx*.6]});        // lash flick
+    P(faceM,BG(.13,.03,.02),mat.ink,ex,.105,.376,{...F,r:[0,sx*.3,sx*.2]});                 // strong brow
+    P(faceF,BG(.11,.017,.02),mat.ink,ex,.12,.372,{...F,r:[0,sx*.3,-sx*.08]});               // soft brow
+    P(H,SG(.062,10,8),mat.blush,sx*.27,-.15,.31,{s:[1,.5,.15],...F});
   }
-  // Thin goggles conform to the head: front surface projects < 0.04 units.
-  for(const sx of [-1,1]){
-    part(H,SG(.097,16,12),eyeWhite,sx*.154,.069,.387,{s:[1,.79,.13],cast:false});
-    part(H,SG(.052,14,12),pupil,sx*.152,.058,.401,{s:[1,1.18,.22],cast:false});
-    part(H,SG(.021,10,10),eyeWhite,sx*.142+.020,.083,.415,{s:[1,.8,.17],cast:false});
-    part(H,SG(.07,12,8),blush,sx*.29,-.115,.292,{s:[1,.46,.10],cast:false});
-    part(H,SG(.111,18,12),goggleGlass,sx*.155,.073,.411,{s:[1.12,.71,.12],cast:false});
-    const rim=part(H,new THREE.TorusGeometry(.113,.010,7,24),goggleRim,sx*.155,.072,.423,{cast:false});
-    rim.scale.set(1.13,.71,1);
-    // Short temples following cheeks; no bulky mask/box protruding from the eyes.
-    part(H,BG(.107,.024,.028),goggleRim,sx*.338,.077,.265,{cast:false});
+  P(faceM,new THREE.TorusGeometry(.04,.009,6,12,Math.PI*.9),mat.ink,.01,-.175,.392,{...F,r:[0,0,Math.PI*1.05]});
+  P(faceF,new THREE.TorusGeometry(.036,.011,6,12,Math.PI*.9),mat.mouth,0,-.18,.392,{...F,r:[0,0,Math.PI*1.05]});
+  /* shared hair volume */
+  const hairShell=P(H,SG(.452,30,20,Math.PI*.56),mat.hair,0,.06,-.03,{r:[-.16,0,0]});
+  P(H,SG(.43,26,18),mat.hair,0,-.05,-.085,{s:[1,.92,.92]});
+  /* goggles pushed up on forehead */
+  P(H,new THREE.TorusGeometry(.446,.024,8,44),mat.strap,0,.15,-.03,{r:[Math.PI/2-.34,0,0],ol:false});
+  for(const sx of[-1,1]){
+    const g=new THREE.Group();g.position.set(sx*.125,.33,.325);g.rotation.set(Math.PI/2-.62,0,-sx*.16);H.add(g);
+    P(g,CG(.09,.095,.06,22),mat.frame,0,0,0);
+    P(g,CG(.068,.068,.02,22),mat.lens,0,.031,0,F);
+    P(g,BG(.055,.005,.016),mat.hl,-.012,.043,-.02,{...F,r:[0,.5,0]});
   }
-  part(H,BG(.065,.020,.024),goggleRim,0,.067,.428,{cast:false});
-  part(H,SG(.053,12,8),skin,0,-.045,.415,{s:[.8,.8,.35],cast:false});
-  part(H,SG(.055,14,8),pupil,0,-.19,.377,{s:[.74,.18,.12],cast:false});
-  // Low-profile rear band and a ponytail only for the female avatar.
-  part(H,BG(.41,.029,.025),strap,0,.081,-.38,{cast:false});
-  const pony=part(H,SG(.128,16,12),hair,0,-.25,-.38,{s:[.83,1.40,.80]});
-  part(H,BG(.082,.045,.045),scarf,0,-.175,-.393,{cast:false});
-  // Both arms + weapon animate together for aiming and magazine changes.
+  P(H,BG(.07,.035,.04),mat.frame,0,.35,.34,{r:[-.6,0,0],ol:false});
+  P(H,BG(.03,.1,.03),mat.strap,-.43,-.03,.05,{ol:false});P(H,SG(.025,8,6),mat.acc,-.44,-.1,.07,F);   // earpiece
+  /* male hair: spiky crown + nape + spiky bangs */
+  const hairM=new THREE.Group();H.add(hairM);
+  const HC=V(0,.04,-.04);
+  // calm, layered locks swept down the back of the head (fewer, flatter, shorter tips)
+  const SWEEP=V(0,-.85,-.5);
+  for(const [x,y,z,len,r] of [[-.3,.85,-.4,.2,.13],[.3,.85,-.4,.2,.13],[-.45,.45,-.8,.2,.13],[.05,.5,-.88,.22,.14],[.47,.42,-.78,.2,.13],
+    [-.3,0,-.95,.18,.12],[.28,0,-.96,.18,.12],[0,-.3,-.95,.15,.11],[-.85,.1,-.5,.14,.1],[.85,.1,-.5,.14,.1]]){
+    const n=V(x,y,z).normalize(),d=n.clone().multiplyScalar(.7).add(SWEEP).normalize();
+    along(hairM,new THREE.ConeGeometry(r,len*1.35,10),mat.hair,HC.clone().addScaledVector(n,.37),d,len*1.35,{s:[1,1,.55]})}
+  for(const x of[-.27,-.15,-.03,.09,.21,.31]){
+    const zs=Math.sqrt(Math.max(.01,.2-.3*.3-x*x))+.02;
+    along(hairM,new THREE.ConeGeometry(.072,.2,7),mat.hair,V(x,.31,zs),V(x*.35,-1,.35),.2)}
+  /* female hair: swept bangs, face-framing locks, high ponytail with scrunchie */
+  const hairF=new THREE.Group();H.add(hairF);
+  for(const [x,y,rz,sx] of [[-.2,.24,.5,1.3],[.0,.25,.2,1.4],[.2,.22,-.35,1.2],[.31,.13,-.8,.9],[-.32,.12,.85,.9]])
+    P(hairF,SG(.12,16,10),mat.hair,x,y,Math.sqrt(Math.max(.01,.19-y*y-x*x))-.02,{s:[sx,.55,.45],r:[-.35,0,rz]});
+  for(const sx of[-1,1]){P(hairF,SG(.1,14,10),mat.hair,sx*.37,-.12,.13,{s:[.62,2.3,.72],r:[0,0,-sx*.08]});
+    along(hairF,new THREE.ConeGeometry(.06,.16,8),mat.hair,V(sx*.38,-.34,.13),V(sx*.1,-1,0),.16)}
+  // tied ponytail: one smooth tapered tail gathered by a scrunchie
+  const pony=new THREE.Group();pony.position.set(0,.36,-.36);hairF.add(pony);
+  P(pony,SG(.1,16,12),mat.hair,0,.035,.05,{s:[1.05,.85,1]});                                   // gathered hair at the tie
+  P(pony,new THREE.TorusGeometry(.068,.03,10,20),mat.acc,0,0,0,{r:[Math.PI/2,0,0]});           // scrunchie
+  const TAIL=[[.001,.02],[.055,.01],[.07,-.03],[.105,-.1],[.13,-.2],[.135,-.31],[.122,-.43],[.098,-.54],[.068,-.64],[.036,-.72],[.001,-.78]].reverse().map(([x,y])=>new THREE.Vector2(x,y));
+  P(pony,new THREE.LatheGeometry(TAIL,22),mat.hair,0,-.01,0,{s:[1,1,.8]});
+  P(pony,new THREE.ConeGeometry(.03,.14,8),mat.hair,.04,-.79,.01,{r:[0,0,.35]});                 // split tip
+  P(pony,new THREE.ConeGeometry(.026,.12,8),mat.hair,-.035,-.78,-.01,{r:[0,0,-.4]});
+  for(const sx of[-1,1])P(pony,SG(.075,12,8),mat.acc,sx*.085,.035,.04,{s:[1.15,.6,.3],r:[0,0,sx*.55]});  // small bow
+  /* arms + weapon (animated as one) */
   const upper=new THREE.Group();upper.position.set(0,1.25,.075);upper.rotation.order='YXZ';pivot.add(upper);
   for(const sx of [-1,1]){
-    part(upper,SG(.146,16,12),jacket,sx*.32,-.052,.095,{s:[1,.96,.94]});
-    part(upper,CG(.125,.105,.295,14),jacket,sx*.28,-.16,.20,{r:[.69,0,sx*.17]});
-    part(upper,SG(.11,14,10),jacket,sx*.26,-.23,.30);
-    part(upper,CG(.085,.078,.23,12),jacket,sx*.20,-.18,.43,{r:[1.17,0,-sx*.33]});
-    part(upper,SG(.087,14,10),gloves,sx*.13,-.135,.54,{s:[.88,.80,.98]});
+    P(upper,SG(.146,16,12),mat.jacket,sx*.32,-.052,.095,{s:[1,.96,.94]});
+    P(upper,CG(.125,.105,.295,14),mat.jacket,sx*.28,-.16,.20,{r:[.69,0,sx*.17]});
+    P(upper,CG(.128,.122,.05,14),mat.acc,sx*.29,-.13,.165,{r:[.69,0,sx*.17],ol:false});   // arm band
+    P(upper,SG(.11,14,10),mat.jacket,sx*.26,-.23,.30);
+    P(upper,CG(.085,.078,.23,12),mat.jacket,sx*.20,-.18,.43,{r:[1.17,0,-sx*.33]});
+    P(upper,CG(.088,.088,.045,12),mat.jacketDark,sx*.165,-.16,.50,{r:[1.17,0,-sx*.33],ol:false});
+    P(upper,SG(.087,14,10),mat.glove,sx*.13,-.135,.54,{s:[.88,.80,.98]});
   }
   const gun=new THREE.Group();gun.position.set(.155,.14,.58);upper.add(gun);
   const models={},magazines={};
@@ -655,26 +670,26 @@ const PL=(()=>{
   part(rocket,CG(.22,.22,.075,16),silver,0,.05,.78,{r:[Math.PI/2,0,0]});
   part(rocket,BG(.12,.22,.17),dark,0,-.15,.04);part(rocket,BG(.16,.065,.12),silver,0,.29,-.15);
   magazines.rocket=part(rocket,BG(.11,.16,.09),dark,0,-.18,0);
+  for(const k in models)models[k].traverse(o=>{if(o.isMesh)o.userData.noOL=true});
   const fl=new THREE.Sprite(flashMat);fl.scale.setScalar(.8);fl.position.set(0,.025,.44);fl.visible=false;gun.add(fl);
   const muzzle=new THREE.Object3D();muzzle.position.set(0,.025,.44);gun.add(muzzle);
   models.pistol.visible=true;
+  inkOutline(root);
   root.traverse(o=>{o.userData.keep=true});
-  return{root,pivot,legL,legR,upper,H,gun,models,magazines,flash:fl,muzzle,jacket,scarf,pony,torso,hips,belt,gender:'male',yaw:0,pitch:0,tYaw:0,tPitch:0,kick:0,flinch:0,reloadPose:0};
+  return{root,pivot,legL,legR,upper,H,gun,models,magazines,flash:fl,muzzle,mat,hairM,hairF,faceM,faceF,pony,led,torso,hips,belt,gender:'male',yaw:0,pitch:0,tYaw:0,tPitch:0,kick:0,flinch:0,reloadPose:0};
 })();
 scene.add(PL.root);
 function setGender(g){
-  PL.gender=g;
-  PL.jacket.color.set(g==='female'?'#8a5876':'#346f83');
-  PL.scarf.color.set(g==='female'?'#edc58b':'#ffcb4b');
-  PL.pony.visible=g==='female';
-  PL.torso.scale.x=g==='female'?.91:1;
-  PL.hips.scale.x=g==='female'?.91:1;
-  PL.H.scale.setScalar(g==='female'?.985:1);
-  document.querySelectorAll('#genderSel button,#agentCards button').forEach(b=>b.classList.toggle('on',b.dataset.g===g));
-  if(typeof renderAgentPortrait==='function')renderAgentPortrait(g);
+  PL.gender=g;const f=g==='female',p=PAL[g],m=PL.mat;
+  m.jacket.color.copy(LIN(p.jacket));m.jacketDark.color.copy(LIN(p.jacketDark));m.acc.color.copy(LIN(p.acc));m.hair.color.copy(LIN(p.hair));
+  m.iris.color.copy(LIN(p.iris));m.lens.color.copy(LIN(p.lens));m.lens.emissive.copy(LIN(p.lensE));
+  PL.hairM.visible=PL.faceM.visible=!f;PL.hairF.visible=PL.faceF.visible=f;
+  PL.torso.scale.x=f?.97:1.06;PL.hips.scale.x=f?.92:1;
+  PL.H.scale.setScalar(f?.985:1);
+  document.querySelectorAll('#genderSel button,#agentCards button').forEach(b=>{const on=b.dataset.g===g;b.classList.toggle('on',on);b.setAttribute('aria-pressed',String(on))});
 }
-document.querySelectorAll('#genderSel button,#agentCards button').forEach(b=>b.addEventListener('click',()=>setGender(b.dataset.g)));
-setGender('male');
+document.querySelectorAll('#genderSel button,#agentCards button').forEach(b=>b.addEventListener('click',()=>{setGender(b.dataset.g);try{localStorage.setItem('lc_gender',b.dataset.g)}catch(_){}}));
+{let g0='male';try{const s=localStorage.getItem('lc_gender');if(s==='female'||s==='male')g0=s}catch(_){}setGender(g0)}
 function setGunModel(key){
   for(const k in PL.models)PL.models[k].visible=(k===key);
   const z=key==='pistol'?.40:key==='rifle'?.94:key==='shotgun'?1.05:.92;
@@ -700,7 +715,7 @@ const boomLight=new THREE.PointLight(0xff8a30,0,22,1.5);scene.add(boomLight);
 function poof(p,big){for(let i=0;i<(big?7:4);i++)fxSprite(smokeTex,p.clone().add(V(rnd(-.4,.4),rnd(-.3,.4),rnd(-.4,.4))),big?1.4:.9,.6,1.4,false,0xffffff);for(let i=0;i<(big?8:5);i++){const s=fxSprite(starTex,p.clone().add(V(rnd(-.5,.5),rnd(-.2,.5),rnd(-.3,.3))),.35,.7,.4,false);s.vy=rnd(1,2.5)}}
 function explode(b){
   const p=b.position.clone();p.y=.6;
-  world.remove(b);b.userData.rims.forEach(r=>world.remove(r));solids=solids.filter(o=>o!==b);barrels=barrels.filter(o=>o!==b);
+  world.remove(b);b.geometry.dispose();b.userData.rims.forEach(r=>{world.remove(r);r.geometry.dispose()});solids=solids.filter(o=>!b.userData.rims.includes(o));solids=solids.filter(o=>o!==b);barrels=barrels.filter(o=>o!==b);
   for(let i=0;i<5;i++)fxSprite(glowTex,p.clone().add(V(rnd(-.6,.6),rnd(0,1.2),rnd(-.6,.6))),rnd(1.5,2.5),rnd(.45,.7),rnd(3,5));
   for(let i=0;i<5;i++)fxSprite(smokeTex,p.clone().add(V(rnd(-.8,.8),rnd(.5,1.8),rnd(-.8,.8))),2,1.6,2.5,false,0x444444);
   burst(p,40,'fire',6,1.8);burst(p,20,'spark',7,2);
@@ -824,25 +839,26 @@ function initializeGears(zstart=false){
   G.weapon='pistol';G.mags={pistol:6,rifle:24,shotgun:5,rocket:0};G.owned={pistol:true};
   G.upgrades={pistol:0,rifle:0,shotgun:0,rocket:0};G.tokens=0;G.nextTokenAt=3500;G.rocketDrops=0;G.reloading=false;G.reloadT=0;
   G.coverHP=6;G.lastShotAt=clock;G.fireHeld=false;G.fireTick=0;
-  if(zstart){G.score=11200;checkUnlocks();}else G.score=0;
+  if(zstart){G.score=11200;checkUnlocks(true);}else G.score=0;
+  msgQ.length=0;
   equipWeapon(zstart?'rifle':'pistol',true);
 }
 function equipWeapon(id,quiet=false){
   if(!G.owned[id]||(id==='rocket'&&G.mags.rocket<=0))return false;
   G.mags[G.weapon]=G.ammo;G.weapon=id;G.ammo=G.mags[id];G.reloading=false;G.reloadT=0;
   G.fireHeld=false;setGunModel(id);
-  if(!quiet){SFX.ui(740);msg(WEAPONS[id].name,'yel',.75)}
+  if(!quiet){SFX.ui(740);msg(WEAPONS[id].name,'yel',.75,'',true)}
   return true;
 }
-function cycleWeapon(){
+function cycleWeapon(dir=1){
   if(!['combat','clear','wait'].includes(G.phase))return;
   const keys=Object.keys(WEAPONS).filter(k=>G.owned[k]&&(k!=='rocket'||G.mags.rocket>0));
-  equipWeapon(keys[(keys.indexOf(G.weapon)+1)%keys.length]);
+  if(keys.length<2)return;equipWeapon(keys[(keys.indexOf(G.weapon)+dir+keys.length)%keys.length]);
 }
-function checkUnlocks(){
+function checkUnlocks(silent){
   for(const [k,w] of Object.entries(WEAPONS)){
     if(!G.owned[k]&&G.score>=w.unlock){G.owned[k]=true;if(k==='rocket')G.mags.rocket=3;
-      msg('NEW WEAPON','yel',1.3,w.name+' 해금 · ARMORY에서 선택');SFX.action();$('armory').classList.add('hot');}
+      if(!silent){msg('NEW WEAPON','yel',1.3,w.name+' 해금 · ARMORY에서 선택');SFX.action()}$('armory').classList.add('hot');}
   }
   while(G.score>=G.nextTokenAt){G.tokens++;G.nextTokenAt+=3500;$('armory').classList.add('hot')}
   for(const [i,threshold] of [19000,29000,41000].entries())if(G.score>=threshold&&G.rocketDrops<=i){
@@ -858,6 +874,7 @@ function closeShop(){
   if(G.phase!=='shop')return;
   $('shop').classList.remove('open');G.phase=shopReturn;coverHeld=false;G.reloading=false;G.reloadT=0;
 }
+const UPG_TXT={pistol:'강화당 피해 +60%',rifle:'강화당 피해 +60%',shotgun:'강화당 피해 +30%',rocket:'강화당 피해 +25%·반경 +0.6m'};
 function drawShop(){
   $('weaponToken').textContent=`강화 칩 ${G.tokens}개 · 획득 점수 ${G.score.toLocaleString()}점 · 다음 강화 ${G.nextTokenAt.toLocaleString()}점`;
   $('weaponCards').innerHTML='';
@@ -865,7 +882,7 @@ function drawShop(){
     const owned=!!G.owned[key],el=document.createElement('div');el.className='wcard'+(!owned?' locked':'')+(G.weapon===key?' selected':'');
     const title=document.createElement('h3');title.textContent=w.icon+' '+w.name;el.appendChild(title);
     const desc=document.createElement('p');desc.textContent=owned?w.desc:`${w.unlock.toLocaleString()}점 달성 시 해금`;el.appendChild(desc);
-    const level=document.createElement('p');level.textContent=`강화 Lv.${G.upgrades[key]}/3  ·  ${key==='rocket'?'남은 발사 '+G.mags.rocket: '탄창 '+w.mag+'발'}`;el.appendChild(level);
+    const level=document.createElement('p');level.textContent=`강화 Lv.${G.upgrades[key]}/3 (${UPG_TXT[key]})  ·  ${key==='rocket'?'남은 발사 '+G.mags.rocket: '탄창 '+w.mag+'발'}`;el.appendChild(level);
     const eq=document.createElement('button');eq.textContent=G.weapon===key?'장착 중':'장착';eq.disabled=!owned||G.weapon===key||(key==='rocket'&&G.mags.rocket<=0);
     eq.addEventListener('click',()=>{equipWeapon(key);drawShop()});el.appendChild(eq);
     const up=document.createElement('button');up.textContent=' ⬆ 강화';up.style.marginLeft='6px';up.disabled=!owned||!G.tokens||G.upgrades[key]>=3;
@@ -910,9 +927,9 @@ function beginStage(s){
   banner(`STAGE ${s+1}`,STAGES[s].name,STAGES[s].kr+(s>=3?' · 바이러스 격리 실패':' · KRS 작전'),2.6);setStageHud();$('chapterBadge').textContent=s>=3?'CHAPTER 2 · OUTBREAK':'CHAPTER 1 · KRS BLACKSITE';
   $('fade').style.opacity='0';
 }
-let bannerT=0,msgT=0;
+let bannerT=0,msgT=0;const msgQ=[];
 function banner(a,b,c,t){$('bn1').textContent=a;$('bn2').textContent=b;$('bn3').textContent=c||'';$('banner').style.opacity='1';bannerT=t}
-function msg(text,cls,t=1,sub=''){const m=$('msg');m.textContent=text;m.className='';void m.offsetWidth;m.className='show '+cls;msgT=t;$('sub').textContent=sub;$('sub').style.opacity=sub?'1':'0'}
+function msg(text,cls,t=1,sub='',force){if(!force&&bannerT>.25){if(msgQ.length<4)msgQ.push([text,cls,t,sub]);return}const m=$('msg');m.textContent=text;m.className='';void m.offsetWidth;m.className='show '+cls;msgT=t;$('sub').textContent=sub;$('sub').style.opacity=sub?'1':'0'}
 function popup(w3,text,cls=''){const v=w3.clone().project(cam);if(v.z>1)return;const d=document.createElement('div');d.className='pop '+cls;d.textContent=text;d.style.left=((v.x+1)/2*VW+rnd(-10,10))+'px';d.style.top=((1-v.y)/2*VH)+'px';document.body.appendChild(d);setTimeout(()=>d.remove(),820)}
 
 function spawnEnemy(sp,type){
@@ -952,7 +969,7 @@ function areaClear(){
     banner(G.stage===STAGES.length-1?'MISSION':'STAGE '+(G.stage+1),G.stage===STAGES.length-1?'COMPLETE':'CLEAR',`TIME BONUS +${bonus.toLocaleString()}`,3.6);SFX.ui(990);
   }else{
     G.phase='clear';G.t=1.3;G.time=Math.min(120,G.time+(G.stage>=3?23:15));if(G.stage>=3)G.life=Math.min(5,G.life+1);
-    msg('AREA CLEAR','wht',1.3,'TIME EXTENDED +15');SFX.ui(880);
+    msg('AREA CLEAR','wht',1.3,G.stage>=3?'TIME +23 · LIFE +1':'TIME EXTENDED +15');SFX.ui(880);
   }
 }
 function startCrashCinematic(){
@@ -978,7 +995,8 @@ function showResult(win,reason){
   document.querySelector('.guide').style.display='none';$('play').textContent='다시 도전';
 }
 function hurt(){
-  if(G.inv>0||(coverAmt>.5&&!G.forceHit)||G.phase!=='combat')return;G.forceHit=false;
+  const forced=G.forceHit;G.forceHit=false;
+  if(G.inv>0||(coverAmt>.5&&!forced)||G.phase!=='combat')return;
   G.life--;G.inv=1.3;$('flash').style.opacity='1';shake=Math.max(shake,1.2);SFX.hurt();PL.flinch=1;
   if(navigator.vibrate)try{navigator.vibrate(120)}catch(e){}
   popup(PL.root.position.clone().add(V(0,1.4,0)),'OUCH!','ow');
@@ -997,7 +1015,8 @@ function damage(e,head,pt,amount,weak){
       return;
     }
     if(weak!=='head'){popup(pt,'HEAD ONLY!','ow');SFX.armor();return}
-    e.hp-=Math.max(1,amount||(head?3:2));e.hit=1;burst(pt,13,'star',3);    popup(pt,'HEADSHOT!','hs');SFX.hit();if(e.hp<=0)kill(e,true);return;
+    e.hp-=Math.max(1,amount||(head?3:2));e.hit=1;burst(pt,13,'star',3);
+    popup(pt,'HEADSHOT!','hs');SFX.hit();if(e.hp<=0)kill(e,true);return;
   }
   const dmg=amount||(head?(e.type==='boss'?3:2):1);e.hp-=dmg;e.hit=1;
   burst(pt,head?8:5,'pop',2);burst(pt,head?6:3,'star',2.4);
@@ -1066,15 +1085,16 @@ function castShot(cx,cy){
   return{kind:'miss',pt:ray.ray.at(24,V())};
 }
 function rocketBlast(point){
+  const lv=G.upgrades.rocket,R2=5+lv*.6,dmg=1+lv*.25;
   fxSprite(glowTex,point,2.4,.6,3);for(let i=0;i<8;i++)fxSprite(smokeTex,point.clone().add(V(rnd(-1,1),rnd(.1,1.3),rnd(-1,1))),1.7,1.0,2,false,0x687065);
   burst(point,50,'fire',6);burst(point,20,'spark',8);shake=Math.max(shake,1.5);boomLight.position.copy(point);boomLight.intensity=10;SFX.boom();
   let hit=false;
-  for(const e of enemies){if(e.dead||e.root.position.distanceTo(point)>5.0)continue;
+  for(const e of enemies){if(e.dead||e.root.position.distanceTo(point)>R2)continue;
     if(e.type==='zboss'){
       const wp=e.legsDown?'head':null;
-      if(wp)damage(e,true,e.H.getWorldPosition(V()),4,wp);
-      else for(const leg of ['left','right'])if(e.legs[leg]>0)damage(e,false,e[leg==='left'?'legL':'legR'].getWorldPosition(V()),4,leg);
-    }else damage(e,false,e.root.position.clone().add(V(0,e.s.sc*.8,0)),e.type==='boss'?6:8);
+      if(wp)damage(e,true,e.H.getWorldPosition(V()),4*dmg,wp);
+      else for(const leg of ['left','right'])if(e.legs[leg]>0)damage(e,false,e[leg==='left'?'legL':'legR'].getWorldPosition(V()),4*dmg,leg);
+    }else damage(e,false,e.root.position.clone().add(V(0,e.s.sc*.8,0)),(e.type==='boss'?6:8)*dmg);
     hit=true;
   }
   for(const b of barrels.slice())if(b.position.distanceTo(point)<3.0)explode(b);
@@ -1257,6 +1277,10 @@ function updatePlayer(dt,ph){
     const baseline=key==='rifle'?-.24:key==='pistol'?-.15:key==='shotgun'?-.18:-.2;
     mag.position.y=baseline-drop;mag.rotation.z=drop*2;
   }
+  // secondary motion: ponytail swing + backpack beacon
+  PL.pony.rotation.x=.62+Math.sin(clock*2.6)*.06+(ph==='move'?Math.abs(Math.sin(G.moveT*G.moveDur*11))*.2:0)+PL.flinch*.35+PL.kick*.05;
+  PL.pony.rotation.z=Math.sin(clock*1.9)*.07-PL.yaw*.3;
+  PL.mat.led.emissiveIntensity=(clock%1.2)<.12?2.4:.35;
   PL.H.rotation.y=PL.yaw*.5;PL.H.rotation.z=G.reloading?Math.sin(reloadK*Math.PI)*.15:0;
   PL.root.getWorldPosition(plHead);plHead.y+=1.46+PL.pivot.position.y;
 }
@@ -1284,12 +1308,17 @@ function updateCamera(ph){
 const lifeEls=[],ammoEls=[];
 for(let i=0;i<5;i++){const d=document.createElement('i');$('life').appendChild(d);lifeEls.push(d)}
 for(let i=0;i<12;i++){const d=document.createElement('i');$('ammo').appendChild(d);ammoEls.push(d)}
+// Cached DOM lookups + write-only-on-change keep the per-frame HUD update cheap on phones.
+const DOMC={},$$=id=>DOMC[id]||(DOMC[id]=$(id));
+function setT(el,v){if(typeof el==='string')el=$$(el);v=String(v);if(el.textContent!==v)el.textContent=v}
+const QW_ICON=$('quickWeapon').querySelector('strong'),QW_SUB=$('quickWeapon').querySelector('small');
 function update(dt){
   clock+=dt;
   sideCur=lerp(sideCur,sideT,Math.min(1,dt*6));
-  if(bannerT>0){bannerT-=dt;if(bannerT<=0)$('banner').style.opacity='0'}
-  if(msgT>0){msgT-=dt;if(msgT<=0){$('msg').className='';$('sub').style.opacity='0'}}
-  const fl=$('flash');const fo=parseFloat(fl.style.opacity||0);if(fo>0)fl.style.opacity=String(Math.max(0,fo-dt*2.2));
+  if(bannerT>0){bannerT-=dt;if(bannerT<=0)$$('banner').style.opacity='0'}
+  if(msgT>0){msgT-=dt;if(msgT<=0){$$('msg').className='';$$('sub').style.opacity='0'}}
+  if(msgT<=0&&bannerT<=.25&&msgQ.length&&G.phase!=='menu'&&G.phase!=='over'&&G.phase!=='end')msg(...msgQ.shift(),true);
+  const fl=$$('flash');const fo=parseFloat(fl.style.opacity||0);if(fo>0)fl.style.opacity=String(Math.max(0,fo-dt*2.2));
   shake*=Math.pow(.02,dt);
   for(const q of parts){if(q.t<=0)continue;q.t-=dt;q.v.y-=9.8*dt;q.m.position.addScaledVector(q.v,dt);if(q.m.position.y<.02){q.m.position.y=.02;q.v.multiplyScalar(.4);q.v.y*=-.3}if(q.t<=0)q.m.visible=false}
   for(const tr of tracers)if(tr.t>0){tr.t-=dt;tr.l.material.opacity=Math.max(0,tr.t/.09)}
@@ -1300,21 +1329,21 @@ function update(dt){
   const ph=G.phase;
   let ct=0;if(ph==='wait'||ph==='shop'||ph==='cinematic')ct=1;else if(ph==='combat'||ph==='clear')ct=coverHeld?1:0;
   coverAmt+=(ct-coverAmt)*Math.min(1,dt*13);
-  $('cover').classList.toggle('active',coverHeld);
-   $('coverFx').style.opacity=ph==='combat'?String(coverAmt*.55):'0';
-  $('coverState').style.opacity=ph==='combat'&&coverAmt>.78?'1':'0';
-  $('coverState').textContent=G.reloading?'탄창 교체 중…':G.coverHP===0?'엄폐물 파괴!':'엄폐 중';
+  $$('cover').classList.toggle('active',coverHeld);
+   $$('coverFx').style.opacity=ph==='combat'?String(coverAmt*.55):'0';
+  $$('coverState').style.opacity=ph==='combat'&&coverAmt>.78?'1':'0';
+  setT('coverState',G.reloading?'탄창 교체 중…':G.coverHP===0?'엄폐물 파괴!':'엄폐 중');
   const needsReload=G.phase==='combat'&&G.weapon!=='rocket'&&G.ammo<WEAPONS[G.weapon].mag;
   if(needsReload&&coverHeld&&coverAmt>.73){
     if(!G.reloading){G.reloading=true;G.reloadT=0;SFX.reloadStart();}
     G.reloadT+=dt;
     if(G.reloadT>=WEAPONS[G.weapon].reload){G.ammo=WEAPONS[G.weapon].mag;G.mags[G.weapon]=G.ammo;G.reloading=false;G.reloadT=0;SFX.reload();}
   }else if(G.reloading&&(!coverHeld||coverAmt<.37)){G.reloading=false;G.reloadT=0;}
-  $('reloadUI').classList.toggle('on',G.reloading);
-  $('reloadLabel').textContent='RELOADING '+(G.reloading?Math.max(0,WEAPONS[G.weapon].reload-G.reloadT).toFixed(1):'')+'s';
-  $('reloadFill').style.width=G.reloading?(100*G.reloadT/WEAPONS[G.weapon].reload).toFixed(0)+'%':'0%';
-  $('guard').style.display=G.stage>=3&&ph==='combat'?'block':'none';
-  $('guard').textContent=`BARRICADE ${'■'.repeat(G.coverHP)}${'□'.repeat(6-G.coverHP)}  ·  좀비가 접근합니다`;
+  $$('reloadUI').classList.toggle('on',G.reloading);
+  setT('reloadLabel','RELOADING '+(G.reloading?Math.max(0,WEAPONS[G.weapon].reload-G.reloadT).toFixed(1):'')+'s');
+  $$('reloadFill').style.width=G.reloading?(100*G.reloadT/WEAPONS[G.weapon].reload).toFixed(0)+'%':'0%';
+  $$('guard').style.display=G.stage>=3&&ph==='combat'?'block':'none';
+  setT('guard',`BARRICADE ${'■'.repeat(G.coverHP)}${'□'.repeat(6-G.coverHP)}  ·  좀비가 접근합니다`);
   if(ph==='combat'&&G.fireHeld&&G.weapon==='rifle'&&G.ammo>0){G.fireTick-=dt;if(G.fireTick<=0){shoot(G.fireX,G.fireY);G.fireTick=.12;}}
 
 
@@ -1336,17 +1365,17 @@ function update(dt){
     const step=Math.floor(G.moveT*G.moveDur*3.5);if(step!==G.lastStep){G.lastStep=step;SFX.step()}
     if(G.moveT>=1){G.area++;setStageHud();G.phase='wait';G.waitT=1.3;msg('WAIT','red',.5)}
   }else if(ph==='stageclear'){
-    G.t-=dt;if(G.t<1&&$('fade').style.opacity!=='1')$('fade').style.opacity='1';
-    if(G.t<=0){if(G.stage===STAGES.length-1){G.phase='end';coverHeld=false;G.fireHeld=false;MUSIC.stop();$('hud').style.display='none';$('cover').style.display='none';$('quickWeapon').style.display='none';$('reticle').style.display='none';showResult(true);$('fade').style.opacity='.4'}
+    G.t-=dt;if(G.t<1&&$$('fade').style.opacity!=='1')$$('fade').style.opacity='1';
+    if(G.t<=0){if(G.stage===STAGES.length-1){G.phase='end';coverHeld=false;G.fireHeld=false;MUSIC.stop();$$('hud').style.display='none';$$('cover').style.display='none';$$('quickWeapon').style.display='none';$$('reticle').style.display='none';showResult(true);$$('fade').style.opacity='.4'}
       else if(G.stage===2)startCrashCinematic();else beginStage(G.stage+1)}
   }
   else if(ph==='cinematic'){
     G.cineT-=dt;
-    if(G.cineT<3.2&&!$('cinematic').classList.contains('hit')){
-      $('cinematic').classList.add('hit');$('storyText').textContent='긴급 상황! 헬기 피격! 비상 착륙!';SFX.boom();shake=2;
+    if(G.cineT<3.2&&!$$('cinematic').classList.contains('hit')){
+      $$('cinematic').classList.add('hit');setT('storyText','긴급 상황! 헬기 피격! 비상 착륙!');SFX.boom();shake=2;
     }
-    if(G.cineT<1.35)$('storyText').textContent='바이러스는 이미 확산되었다…  살아남아야 한다.';
-    if(G.cineT<=0){$('cinematic').classList.remove('active','hit');G.life=Math.max(3,G.life);beginStage(3);$('fade').style.opacity='0';}
+    if(G.cineT<1.35)setT('storyText','바이러스는 이미 확산되었다…  살아남아야 한다.');
+    if(G.cineT<=0){$$('cinematic').classList.remove('active','hit');G.life=Math.max(3,G.life);beginStage(3);$$('fade').style.opacity='0';}
   }
   checkUnlocks();
   const ph2=G.phase;
@@ -1354,24 +1383,24 @@ function update(dt){
   if(ph2!=='shop'&&ph2!=='cinematic')for(const e of enemies)updateEnemy(e,dt);
   enemies=enemies.filter(e=>!e.gone);
   if(G.boss&&!G.boss.dead){const b=G.boss;
-    if(b.type==='zboss'){$('bossFill').style.width=(b.legsDown?Math.max(0,b.hp/18*100):Math.max(0,(b.legs.left+b.legs.right)/12*100))+'%';
-      $('bossLabel').textContent=b.legsDown?'PATIENT ZERO · HEAD WEAKPOINT':`PATIENT ZERO · 🦵L ${Math.max(0,b.legs.left)}  /  🦵R ${Math.max(0,b.legs.right)}`;}
-    else $('bossFill').style.width=Math.max(0,b.hp/STYLE.boss.hp*100)+'%';
+    if(b.type==='zboss'){$$('bossFill').style.width=(b.legsDown?Math.max(0,b.hp/18*100):Math.max(0,(b.legs.left+b.legs.right)/12*100))+'%';
+      setT('bossLabel',b.legsDown?'PATIENT ZERO · HEAD WEAKPOINT':`PATIENT ZERO · 🦵L ${Math.max(0,b.legs.left)}  /  🦵R ${Math.max(0,b.legs.right)}`);}
+    else $$('bossFill').style.width=Math.max(0,b.hp/STYLE.boss.hp*100)+'%';
   }
    updateCamera(ph2);
    MUSIC.tick();
 
   if(ph2!=='menu'){
-    $('time').textContent=G.time.toFixed(2);$('time').classList.toggle('low',G.time<10&&ph2==='combat');
-    $('score').textContent=G.score.toLocaleString();
+    setT('time',G.time.toFixed(2));$$('time').classList.toggle('low',G.time<10&&ph2==='combat');
+    setT('score',G.score.toLocaleString());
     lifeEls.forEach((el,i)=>el.classList.toggle('off',i>=G.life));
-    const w=WEAPONS[G.weapon];$('weaponName').textContent=w.icon+' '+w.name+'  Lv.'+G.upgrades[G.weapon];
-    $('ammoCount').textContent=G.ammo+' / '+w.mag;
+    const w=WEAPONS[G.weapon];setT('weaponName',w.icon+' '+w.name+'  Lv.'+G.upgrades[G.weapon]);
+    setT('ammoCount',G.ammo+' / '+w.mag);
     const shown=Math.min(12,w.mag);ammoEls.forEach((el,i)=>{el.style.display=i<shown?'block':'none';el.classList.toggle('off',i>=Math.ceil(G.ammo/Math.max(1,w.mag)*shown));});
-    $('quickWeapon').querySelector('strong').textContent=w.icon;
-    $('quickWeapon').querySelector('small').textContent=G.owned.rifle?'탭해 교체':'잠금';
-    $('reloadTip').textContent=G.weapon==='rocket'?'ROCKET EMPTY · 무기 변경':'RELOAD · COVER!';
-    $('reloadTip').classList.toggle('on',ph2==='combat'&&G.ammo===0&&coverAmt<.5);
+    setT(QW_ICON,w.icon);
+    setT(QW_SUB,G.owned.rifle?(isTouch?'탭해 교체':'Q · 휠'):'잠금');
+    setT('reloadTip',G.weapon==='rocket'?'ROCKET EMPTY · 무기 변경':'RELOAD · COVER!');
+    $$('reloadTip').classList.toggle('on',ph2==='combat'&&G.ammo===0&&coverAmt<.5);
 
   }
 }
@@ -1396,13 +1425,13 @@ const btn=$('cover');
 const held=new Set();
 btn.addEventListener('pointerdown',e=>{e.preventDefault();ac();try{btn.setPointerCapture(e.pointerId)}catch(_){}held.add(e.pointerId);coverHeld=true});
 for(const ev of['pointerup','pointercancel','lostpointercapture'])btn.addEventListener(ev,e=>{held.delete(e.pointerId);coverHeld=held.size>0});
-addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();coverHeld=true}else if(e.code==='KeyE'){if(G.phase==='shop')closeShop();else showShop()}else if(['Digit1','Digit2','Digit3','Digit4'].includes(e.code)){equipWeapon(Object.keys(WEAPONS)[Number(e.code.slice(-1))-1])}});
+addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();coverHeld=true}else if(e.code==='KeyE'){if(G.phase==='shop')closeShop();else showShop()}else if(e.code==='Escape'){if(G.phase==='shop')closeShop()}else if(e.code==='KeyQ'){if(!e.repeat)cycleWeapon()}else if(e.code==='KeyM'){if(!e.repeat)$('music').click()}else if(['Digit1','Digit2','Digit3','Digit4'].includes(e.code)&&['combat','clear','wait','shop','move'].includes(G.phase)){equipWeapon(Object.keys(WEAPONS)[Number(e.code.slice(-1))-1]);if(G.phase==='shop')drawShop()}});
 addEventListener('keyup',e=>{if(e.code==='Space')coverHeld=false});
+let wheelAt=0;canvas.addEventListener('wheel',e=>{e.preventDefault();if(performance.now()-wheelAt<180)return;wheelAt=performance.now();cycleWeapon(e.deltaY<0?-1:1)},{passive:false});
 addEventListener('blur',()=>{held.clear();coverHeld=false;G.fireHeld=false});
 addEventListener('contextmenu',e=>e.preventDefault());
 document.addEventListener('gesturestart',e=>e.preventDefault());
 $('play').addEventListener('click',e=>{e.currentTarget.blur();newGame(false)});
-$('playZombie').addEventListener('click',e=>{e.currentTarget.blur();newGame(true)});
 
 /* ---------------- boot ---------------- */
 buildStage(0);G.area=0;
