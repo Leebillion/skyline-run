@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>LAST COVER : BLACKSITE</title>
+<title>LAST COVER : BLACKSITE · v4</title>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;color:#fff;font-family:'Arial Black','Segoe UI',system-ui,-apple-system,'Malgun Gothic',sans-serif;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
@@ -23,7 +23,11 @@ canvas{display:block;width:100vw;height:100vh;height:100dvh;touch-action:none;cu
 #time.low{color:#ff3b3b;animation:blink .5s steps(2) infinite}
 #tr{position:absolute;top:max(10px,env(safe-area-inset-top));right:max(14px,env(safe-area-inset-right));text-align:right}
 #score{font-size:20px}
-#swap{pointer-events:auto;margin-top:8px;border:2px solid #000;background:#1d2632cc;color:#ffd84a;font:900 11px/1 system-ui,sans-serif;padding:7px 9px;border-radius:14px;letter-spacing:1px}
+#swap,#music{pointer-events:auto;margin-top:8px;border:2px solid #000;background:#1d2632cc;color:#ffd84a;font:900 11px/1 system-ui,sans-serif;padding:7px 9px;border-radius:14px;letter-spacing:1px}
+#music.off{color:#9ba5b0;border-color:#54606d}
+#musicMenu{border:2px solid #ffd400;border-radius:8px;background:#ffd400;color:#000;padding:8px 12px;font:800 13px system-ui,'Malgun Gothic',sans-serif;min-width:80px;cursor:pointer}
+#musicMenu.off{background:transparent;color:#a8b2bd;border-color:#67737e}
+#coverState{position:absolute;left:50%;bottom:15%;transform:translateX(-50%);background:rgba(8,20,28,.72);border:1px solid #8ccad1;padding:6px 12px;border-radius:20px;font:900 12px system-ui,'Malgun Gothic',sans-serif;color:#aef4e3;letter-spacing:1px;white-space:nowrap;opacity:0;transition:opacity .12s;text-shadow:0 1px 2px #000}
 #bl{position:absolute;left:max(14px,env(safe-area-inset-left));bottom:max(14px,env(safe-area-inset-bottom))}
 body.cl #bl{left:auto;right:max(14px,env(safe-area-inset-right));text-align:right}
 body.cl #ammo{justify-content:flex-end}
@@ -91,12 +95,13 @@ body.cl #cover{right:auto;left:max(16px,env(safe-area-inset-left))}
 <div id="hud">
   <div id="tl"><div class="lab">STAGE</div><div id="stageNo" class="num">1-1</div><div id="zone">WAREHOUSE</div><div id="life"></div></div>
   <div id="tc"><div class="lab">TIME</div><div id="time" class="num">50.00</div></div>
-  <div id="tr"><div class="lab">SCORE</div><div id="score" class="num">0</div><button id="swap" aria-label="엄폐 버튼 위치 바꾸기">⇄ 버튼 위치</button></div>
+  <div id="tr"><div class="lab">SCORE</div><div id="score" class="num">0</div><button id="swap" aria-label="엄폐 버튼 위치 바꾸기">⇄ 버튼 위치</button><br><button id="music" aria-label="배경음악 켜기 끄기" aria-pressed="true">♫ BGM ON</button></div>
   <div id="bossbar"><div class="lab" style="text-align:center;margin-bottom:3px">COMMANDER</div><div class="bg"><div id="bossFill"></div></div></div>
   <div id="bl"><div class="lab">BULLETS</div><div id="ammo"></div></div>
   <div id="banner"><div class="b1" id="bn1">STAGE 1</div><div class="b2" id="bn2">WAREHOUSE</div><div class="b3" id="bn3"></div></div>
   <div id="msg"></div><div id="sub"></div>
   <div id="reloadTip">RELOAD!</div>
+  <div id="coverState">엄폐 중 · 장전 완료</div>
 </div>
 <div id="flash"></div>
 <div id="reticle"></div>
@@ -105,7 +110,7 @@ body.cl #cover{right:auto;left:max(16px,env(safe-area-inset-left))}
 <div id="overlay"><div id="panel">
   <div class="logo">LAST<b>COVER</b></div>
   <div class="op">OPERATION BLACKSITE</div>
-  <p id="desc">엄폐 버튼을 누르고 있으면 숨으면서 장전됩니다. 손을 떼면 일어나 사격합니다. 빨간 조준원이 뜬 적은 반드시 맞히니 먼저 쏘거나 숨으세요.</p>
+  <p id="desc">엄폐하면 방벽 아래로 몸을 낮춰 적이 보이지 않습니다. 버튼에서 손을 떼면 일어나 사격! STAGE 2부터는 적도 장애물 뒤에 숨었다가 기습합니다.</p>
   <div class="guide">
     <div><b>사격</b>적을 터치 · 마우스 왼쪽</div>
     <div><b>엄폐 · 장전</b>버튼 누르고 있기 · 스페이스</div>
@@ -113,8 +118,9 @@ body.cl #cover{right:auto;left:max(16px,env(safe-area-inset-left))}
     <div><b>빨간 드럼통</b>쏘면 폭발해 주변 적 제압</div>
   </div>
   <div class="side"><span>엄폐 버튼 위치</span><div class="seg" role="group" aria-label="엄폐 버튼 위치"><button data-s="left">왼쪽</button><button data-s="right">오른쪽</button></div></div>
+  <div class="side"><span>액션 배경음악 (게임 내 실시간 합성)</span><button id="musicMenu" aria-label="배경음악 설정" aria-pressed="true">♫ 켜짐</button></div>
   <button id="play">작전 시작</button>
-  <div id="note">세로 화면 권장 · 한 손 엄지로 엄폐, 다른 손으로 사격 · 첫 실행 시 인터넷 필요</div>
+  <div id="note">세로 화면 권장 · 엄폐 버튼을 누른 채 장전 · 3D 엔진 최초 로딩 시 인터넷 필요</div>
 </div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
@@ -217,7 +223,7 @@ function buildWarehouse(){
     low:(x,z,w,h,d)=>box(w,h,d,Math.random()<.5?crA:crB,x,h/2,z,{ry:rnd(-.05,.05)}),
     tall:(x,z,w,h,d)=>{box(w,h*.5,d,crB,x,h*.25,z);box(w*.92,h*.5,d*.9,crA,x+rnd(-.06,.06),h*.75,z,{ry:rnd(-.08,.08)})},
     barrel:(x,z)=>barrelAt(x,z,bar),
-    player:(x,z)=>box(1.2,.9,.7,crA,x,.45,z,{solid:false})
+    player:(x,z)=>{for(let i=-1;i<=1;i++)box(1.55,1.36,1.0,i===0?crA:crB,x+i*1.55,.68,z)}
   };
 }
 function buildTunnel(){
@@ -246,7 +252,7 @@ function buildTunnel(){
     low:(x,z,w,h,d)=>jersey(x,z,w,h,d),
     tall:(x,z,w,h,d)=>{box(w,h,d,locker,x,h/2,z);box(w*.98,.06,d*1.02,M({color:'#22292d'}),x,h*.5,z,{solid:false,cast:false})},
     barrel:(x,z)=>barrelAt(x,z,bar),
-    player:(x,z)=>jersey(x,z,1.3,.9,.7,false)
+    player:(x,z)=>jersey(x,z,4.8,1.4,1.0,true)
   };
 }
 function buildRoof(){
@@ -275,7 +281,7 @@ function buildRoof(){
     low:(x,z,w,h,d)=>ac(x,z,w,h,d),
     tall:(x,z,w,h,d)=>{box(w,h,d,shed,x,h/2,z);box(w*1.08,.12,d*1.1,dark,x,h+.06,z,{solid:false})},
     barrel:(x,z)=>barrelAt(x,z,bar),
-    player:(x,z)=>ac(x,z,1.3,.9,.7,false)
+    player:(x,z)=>ac(x,z,4.8,1.4,1.0,true)
   };
 }
 
@@ -421,6 +427,74 @@ const SFX={
   step(){nz(.05,.07,420)}
 };
 
+/* ---------------- original arcade soundtrack (Web Audio, no external music file) ---------------- */
+const MUSIC=(()=>{
+  let enabled=true,playing=false,next=0,step=0,bus=null;
+  try{enabled=localStorage.getItem('lc_music')!=='off'}catch(_){}
+  const bpm=148, beat=60/bpm, tickLen=beat/4;
+  const chords=[[52,55,59,64],[48,52,55,60],[55,59,62,67],[50,54,57,62]]; // Em C G D
+  const melody=[76,79,83,79,74,76,79,74,72,76,79,76,74,78,81,78];
+  const freq=m=>440*Math.pow(2,(m-69)/12);
+  function tone(m,t,d,v,wave='sawtooth',end=m,filter=0){
+    if(!AC||!bus)return;
+    const o=AC.createOscillator(),g=AC.createGain();o.type=wave;
+    o.frequency.setValueAtTime(freq(m),t);
+    if(end!==m)o.frequency.exponentialRampToValueAtTime(freq(end),t+d);
+    g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(v,t+.012);
+    g.gain.exponentialRampToValueAtTime(.0001,t+d);
+    if(filter){const f=AC.createBiquadFilter();f.type='lowpass';f.frequency.value=filter;o.connect(f);f.connect(g)}else o.connect(g);
+    g.connect(bus);o.start(t);o.stop(t+d+.015);
+  }
+  function noise(t,d,v,hp){
+    const n=AC.createBufferSource(),f=AC.createBiquadFilter(),g=AC.createGain();
+    n.buffer=NB;n.loop=true;f.type='highpass';f.frequency.value=hp;
+    g.gain.setValueAtTime(Math.max(.0001,v),t);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+    n.connect(f);f.connect(g);g.connect(bus);n.start(t,(step*0.137)%1.5);n.stop(t+d+.01);
+  }
+  function kick(t){
+    const o=AC.createOscillator(),g=AC.createGain();o.type='sine';
+    o.frequency.setValueAtTime(155,t);o.frequency.exponentialRampToValueAtTime(48,t+.16);
+    g.gain.setValueAtTime(.7,t);g.gain.exponentialRampToValueAtTime(.0001,t+.22);
+    o.connect(g);g.connect(bus);o.start(t);o.stop(t+.23);
+  }
+  function schedule(t,n){
+    const beatIdx=n%16,bar=Math.floor(n/16),ch=chords[bar%4];
+    if(beatIdx%4===0)kick(t);
+    if(beatIdx===4||beatIdx===12){noise(t,.135,.28,1400);tone(51,t,.09,.09,'triangle',40)}
+    if(beatIdx%2===0){const openHat=beatIdx===6||beatIdx===14;noise(t,openHat?.095:.04,openHat?.15:.075,6800)}
+    if(beatIdx===3||beatIdx===11)noise(t,.025,.047,8500);
+    if([0,3,6,8,10,14].includes(beatIdx)){
+      const bass=[ch[0]-12,ch[0]-12,ch[0]-5,ch[0]-12,ch[0]-12,ch[0]-5][[0,3,6,8,10,14].indexOf(beatIdx)];
+      tone(bass,t,.16,.27,'sawtooth',bass,450);
+    }
+    if(beatIdx===0||beatIdx===8){for(const m of ch.slice(1))tone(m+12,t,.36,.035,'triangle',m+12,1550)}
+    if(beatIdx%2===0){const note=melody[beatIdx/2+(bar%2)*8];tone(note,t+.012,.11,.064,'square',note,2300)}
+    if(beatIdx===7||beatIdx===15)tone(ch[1]+24,t,.075,.085,'triangle',ch[1]+24);
+  }
+  function updateUI(){
+    const hud=$('music'),menu=$('musicMenu');
+    hud.textContent=enabled?'♫ BGM ON':'♫ BGM OFF';hud.classList.toggle('off',!enabled);hud.setAttribute('aria-pressed',String(enabled));
+    menu.textContent=enabled?'♫ 켜짐':'♪ 꺼짐';menu.classList.toggle('off',!enabled);menu.setAttribute('aria-pressed',String(enabled));
+  }
+  function toggle(){enabled=!enabled;try{localStorage.setItem('lc_music',enabled?'on':'off')}catch(_){};updateUI();
+    if(AC&&bus){bus.gain.setTargetAtTime(enabled?.16:0,AC.currentTime,.045)}if(enabled&&playing){ac();next=AC.currentTime+.045;}
+  }
+  $('music').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();ac();toggle()});
+  $('musicMenu').addEventListener('click',e=>{e.preventDefault();ac();toggle()});
+  updateUI();
+  return{
+    start(){if(!ac())return;if(!bus){bus=AC.createGain();bus.gain.value=enabled?.16:0;bus.connect(AC.destination)}
+      playing=true;step=0;next=AC.currentTime+.07;bus.gain.setTargetAtTime(enabled?.16:0,AC.currentTime,.04);
+    },
+    stop(){playing=false;if(AC&&bus)bus.gain.setTargetAtTime(0,AC.currentTime,.07)},
+    tick(){if(!playing||!enabled||!AC||AC.state!=='running')return;
+      // Just-in-time sample scheduling prevents timers and works on mobile browsers.
+      let count=0;while(next<AC.currentTime+.17&&count++<12){schedule(next,step);next+=tickLen;step++}
+      if(next<AC.currentTime-.3)next=AC.currentTime+.03;
+    }
+  };
+})();
+
 /* ---------------- game state ---------------- */
 const G={phase:'menu',stage:0,area:0,areas:[],life:5,ammo:6,score:0,time:50,shots:0,hits:0,kills:0,inv:0,boss:null};
 let enemies=[],coverAmt=0,coverHeld=false,shake=0,clock=0,lastT=0;
@@ -430,7 +504,7 @@ function buildStage(s){
   for(let i=0;i<3;i++){
     const ax=st.ax[i],az=-i*AREA_GAP,L=LAYOUTS[st.layouts[i]];
     const area={p:V(ax,0,az),look:V(ax,-.9,az-10),spawns:[],count:st.counts[i],boss:!!st.boss&&i===2,z:az};
-    kit.player(ax,az-.75);
+    kit.player(ax,az-.95);
     for(const[k,x0,z0,w,h,d]of L){
       const x=ax+x0,z=az+z0;
       if(k==='barrel'){kit.barrel(x,z);continue}
@@ -444,7 +518,7 @@ function buildStage(s){
 }
 function setStageHud(){$('stageNo').textContent=`${G.stage+1}-${G.area+1}`;$('zone').textContent=STAGES[G.stage].name}
 function newGame(){
-  ac();Object.assign(G,{stage:0,area:0,life:5,ammo:6,score:0,time:50,shots:0,hits:0,kills:0,inv:0});
+  ac();MUSIC.start();Object.assign(G,{stage:0,area:0,life:5,ammo:6,score:0,time:50,shots:0,hits:0,kills:0,inv:0});
   $('overlay').style.display='none';$('hud').style.display='block';$('cover').style.display='block';
   if(!isTouch)$('reticle').style.display='block';
   beginStage(0);SFX.ui(660);
@@ -452,7 +526,7 @@ function newGame(){
 function beginStage(s){
   G.stage=s;G.area=0;G.boss=null;G.time=Math.max(G.time,45);buildStage(s);G.phase='wait';G.waitT=3;coverAmt=1;
   $('bossbar').style.display='none';
-  banner(`STAGE ${s+1}`,STAGES[s].name,STAGES[s].kr,2.6);setStageHud();
+  banner(`STAGE ${s+1}`,STAGES[s].name,STAGES[s].kr+(s>=1?' · 적 엄폐 전술 활성화':''),2.6);setStageHud();
   $('fade').style.opacity='0';
 }
 let bannerT=0,msgT=0;
@@ -461,11 +535,14 @@ function msg(text,cls,t=1,sub=''){const m=$('msg');m.textContent=text;m.classNam
 function popup(w3,text,cls=''){const v=w3.clone().project(cam);if(v.z>1)return;const d=document.createElement('div');d.className='pop '+cls;d.textContent=text;d.style.left=((v.x+1)/2*VW+rnd(-10,10))+'px';d.style.top=((1-v.y)/2*VH)+'px';document.body.appendChild(d);setTimeout(()=>d.remove(),820)}
 
 function spawnEnemy(sp,type){
-  const s=STYLE[type],e=Object.assign({type,s,hp:s.hp,acc:s.acc,sp,state:'enter',t:0,dead:false,hit:0,flashT:0,burst:0},chibi(type));
-  e.hidden=V(sp.hx,sp.rise?-(1.75*s.sc+.35):0,sp.hz);e.shown=V(sp.x,0,sp.z);
-  e.dur=sp.run?e.hidden.distanceTo(e.shown)/4.6:sp.rise?.38:.45;e.moving=!sp.rise;
+   const s=STYLE[type],e=Object.assign({type,s,hp:s.hp,acc:s.acc,sp,state:'enter',t:0,dead:false,hit:0,flashT:0,burst:0},chibi(type));
+   // Stage 2+: cover-aware AI. Low obstacles are handled with actual crouching rather than sinking underground.
+   e.tactical=G.stage>=1&&!sp.run&&type!=='boss'&&Math.random()<(G.stage===1?.66:.92);
+   e.coverPose=sp.rise?.3:1;
+   e.hidden=V(sp.hx,0,sp.hz);e.shown=V(sp.x,0,sp.z);
+   e.dur=sp.run?e.hidden.distanceTo(e.shown)/4.6:sp.rise?.46:.45;e.moving=!sp.rise;
   e.aimT=rnd(...s.aim)+(type==='regular'?.3:0);
-  e.root.position.copy(e.hidden);
+   e.root.position.copy(e.hidden);e.pivot.scale.y=e.coverPose;
   e.root.traverse(o=>{o.userData.enemy=e});
   e.marker=new THREE.Sprite(markerMat);e.marker.visible=false;e.marker.renderOrder=999;world.add(e.marker);
   world.add(e.root);sp.busy=true;enemies.push(e);
@@ -497,7 +574,7 @@ function startMove(){
   curve=new THREE.CatmullRomCurve3(pts,false,'centripetal');G.moveDur=curve.getLength()/4.8;G.moveT=0;G.phase='move';G.lastStep=0;
 }
 function gameOver(reason){
-  G.phase='over';$('hud').style.display='none';$('cover').style.display='none';$('reticle').style.display='none';
+   G.phase='over';MUSIC.stop();$('hud').style.display='none';$('cover').style.display='none';$('reticle').style.display='none';
   setTimeout(()=>showResult(false,reason),900);
 }
 function showResult(win,reason){
@@ -541,12 +618,13 @@ function pxPerM(dist){return VH/(2*Math.tan(cam.fov*Math.PI/360)*dist)}
 function assist(cx,cy){
   let best=null,bs=1e9;
   for(const e of enemies){
-    if(e.dead||e.root.position.y<-.7)continue;
-    const sc=e.s.sc;
-    for(const[isHead,y,r]of[[true,1.2,.42],[false,.6,.36]]){
-      tA.copy(e.root.position);tA.y+=y*sc;
-      const d=tA.distanceTo(cam.position);tB.copy(tA).project(cam);if(tB.z>1)continue;
-      const sx=(tB.x+1)/2*VW,sy=(1-tB.y)/2*VH,rp=Math.max(r*sc*pxPerM(d)*1.35,30);
+     if(e.dead||e.state==='hidden')continue;
+     const sc=e.s.sc;
+     for(const[isHead,y,r]of[[true,1.2,.42],[false,.6,.36]]){
+       // Use actual (animated) body coordinates so crouched enemies never receive phantom hits.
+       tA.set(0,y,0);e.pivot.localToWorld(tA);
+       const d=tA.distanceTo(cam.position);tB.copy(tA).project(cam);if(tB.z>1)continue;
+       const sx=(tB.x+1)/2*VW,sy=(1-tB.y)/2*VH,rp=Math.max(r*sc*(isHead?1:Math.max(.5,e.coverPose))*pxPerM(d)*1.35,24);
       const k=Math.hypot(sx-cx,sy-cy)/rp;if(k>1||k>=bs)continue;
       occ.set(cam.position,tC.copy(tA).sub(cam.position).normalize());occ.far=d-.35;
       if(occ.intersectObjects(solids,false).length)continue;
@@ -597,13 +675,16 @@ function updateEnemy(e,dt){
   if(e.hit>0)e.hit=Math.max(0,e.hit-dt*5);
   const rp=e.root.position;
   if(e.state!=='die'){tmp.set(plHead.x,rp.y,plHead.z);e.root.lookAt(tmp)}
-  if(e.state==='enter'||e.state==='retreat'){
-    e.t+=dt/e.dur;const k=e.sp.run?Math.min(1,e.t):ease(Math.min(1,e.t));
-    if(e.state==='enter')rp.lerpVectors(e.hidden,e.shown,k);else rp.lerpVectors(e.shown,e.hidden,k);
-    const sw=e.moving?Math.sin(clock*16)*.8*(1-Math.min(1,e.t)*.6):0;e.legL.rotation.x=sw;e.legR.rotation.x=-sw;e.pivot.position.y=e.moving?Math.abs(Math.sin(clock*16))*.06:0;
-    if(e.t>=1){e.legL.rotation.x=e.legR.rotation.x=0;if(e.state==='enter')e.state='aim';else{e.state='hidden';e.wait=rnd(.8,2)}}
-  }else if(e.state==='hidden'){
-    e.wait-=dt;if(e.wait<=0){e.state='enter';e.t=0;e.dur=e.sp.rise?.38:.45;e.aimT=rnd(...e.s.aim)}
+   if(e.state==='enter'||e.state==='retreat'){
+     e.t+=dt/e.dur;const k=e.sp.run?Math.min(1,e.t):ease(Math.min(1,e.t));
+     if(e.state==='enter')rp.lerpVectors(e.hidden,e.shown,k);else rp.lerpVectors(e.shown,e.hidden,k);
+     // A low-cover soldier squats behind the crate; tall-cover soldiers sidestep behind the wall.
+     e.coverPose=e.sp.rise?(e.state==='enter'?.28+.72*k:1-.72*k):1;
+     const sw=e.moving?Math.sin(clock*16)*.8*(1-Math.min(1,e.t)*.6):0;e.legL.rotation.x=sw;e.legR.rotation.x=-sw;e.pivot.position.y=e.moving?Math.abs(Math.sin(clock*16))*.06:0;
+     if(e.t>=1){e.legL.rotation.x=e.legR.rotation.x=0;if(e.state==='enter'){e.state='aim';e.aimT=rnd(...e.s.aim)*(e.tactical?.8:1)}else{e.state='hidden';e.wait=e.tactical?rnd(.65,1.6):rnd(1.0,2.1)}}
+   }else if(e.state==='hidden'){
+     e.coverPose=e.sp.rise?.28:1;e.marker.visible=false;
+     e.wait-=dt;if(e.wait<=0){e.state='enter';e.t=0;e.dur=e.sp.rise?.4:.48;e.aimT=rnd(...e.s.aim)}
   }else if(e.state==='aim'){
     if(e.type==='boss'){
       const sp=e.hp<15?3:2.1;if(Math.abs(e.tx-rp.x)<.1)e.tx=G.areas[2].p.x+rnd(-3.2,3.2);
@@ -619,8 +700,9 @@ function updateEnemy(e,dt){
       e.marker.visible=false;e.warned=false;enemyFire(e);
       if(e.type==='boss'){
         e.burst++;if(e.burst<3){e.aimT=.14;e.acc=.55}else{e.burst=0;e.acc=STYLE.boss.acc;e.aimT=rnd(...STYLE.boss.aim)*(e.hp<15?.7:1)}
-      }else if(Math.random()<.35&&!e.sp.run){e.state='retreat';e.t=0;e.dur=.35}
-      else e.aimT=rnd(...e.s.aim);
+       }else if(!e.sp.run&&Math.random()<(e.tactical?(G.stage===2?.85:.7):.23)){
+         e.state='retreat';e.t=0;e.dur=e.sp.rise?.38:.46;
+       }else e.aimT=rnd(...e.s.aim);
     }
   }else if(e.state==='die'){
     e.t+=dt;const k=ease(Math.min(1,e.t/.45));e.pivot.rotation.x=-k*1.3;e.pivot.rotation.y=e.spin*k*1.2;e.pivot.position.y=Math.sin(Math.min(1,e.t/.45)*Math.PI)*.35;
@@ -628,16 +710,18 @@ function updateEnemy(e,dt){
     if(e.t>1.2){removeEnemy(e);e.gone=true}
     return;
   }
-  const sq=e.hit*.14;e.pivot.scale.set(1+sq,1-sq,1+sq);e.pivot.rotation.x=-e.hit*.3;
+   if(coverAmt>.5)e.marker.visible=false; // warning HUD never shines through the player's physical barricade
+  const sq=e.hit*.14;e.pivot.scale.set(1+sq,Math.max(.23,e.coverPose)*(1-sq),1+sq);e.pivot.rotation.x=-e.hit*.3;
 }
 
 /* ---------------- player & camera ---------------- */
 const camPos=V(),camLook=V(),pA=V(),pB=V(),lA=V(),lB=V(),tan=V(),right=V();
 function standPose(a,cov,outP,outL){
   const s=sideCur;
-  const hy=portrait?2.7:2.25,ly=portrait?-.9:.35;
-  outP.set(a.p.x+s*lerp(.78,.82,cov),lerp(hy,1.65,cov),a.p.z+lerp(2.75,2.25,cov));
-  outL.set(a.look.x+s*.4,ly+cov*(portrait?1.2:.5),a.look.z);
+   const hy=portrait?2.7:2.25,ly=portrait?-.9:.35;
+   // Descend below the real cover lip: the wide solid barricade occludes every enemy's sightline.
+   outP.set(a.p.x+s*lerp(.78,.46,cov),lerp(hy,.66,cov),a.p.z+lerp(2.75,1.75,cov));
+   outL.set(a.look.x+s*lerp(.4,.18,cov),lerp(ly,.60,cov),a.look.z);
 }
 function updatePlayer(dt,ph){
   const a=G.areas[G.area];PL.kick=Math.max(0,PL.kick-dt*8);PL.flinch=Math.max(0,PL.flinch-dt*3);
@@ -702,7 +786,8 @@ function update(dt){
   let ct=0;if(ph==='wait')ct=1;else if(ph==='combat'||ph==='clear')ct=coverHeld?1:0;
   coverAmt+=(ct-coverAmt)*Math.min(1,dt*13);
   $('cover').classList.toggle('active',coverHeld);
-  $('coverFx').style.opacity=ph==='combat'?String(coverAmt*.9):'0';
+   $('coverFx').style.opacity=ph==='combat'?String(coverAmt*.55):'0';
+   $('coverState').style.opacity=ph==='combat'&&coverAmt>.78?'1':'0';
 
   if(ph==='wait'){
     G.waitT-=dt;if(bannerT<=0&&msgT<=0&&G.waitT>.2)msg('WAIT','red',.5);
@@ -725,14 +810,15 @@ function update(dt){
     if(G.moveT>=1){G.area++;setStageHud();G.phase='wait';G.waitT=1.3;msg('WAIT','red',.5)}
   }else if(ph==='stageclear'){
     G.t-=dt;if(G.t<1&&$('fade').style.opacity!=='1')$('fade').style.opacity='1';
-    if(G.t<=0){if(G.stage===2){G.phase='end';$('hud').style.display='none';$('cover').style.display='none';$('reticle').style.display='none';showResult(true);$('fade').style.opacity='.4'}else beginStage(G.stage+1)}
+     if(G.t<=0){if(G.stage===2){G.phase='end';MUSIC.stop();$('hud').style.display='none';$('cover').style.display='none';$('reticle').style.display='none';showResult(true);$('fade').style.opacity='.4'}else beginStage(G.stage+1)}
   }
   const ph2=G.phase;
   updatePlayer(dt,ph2);
   for(const e of enemies)updateEnemy(e,dt);
   enemies=enemies.filter(e=>!e.gone);
   if(G.boss&&!G.boss.dead)$('bossFill').style.width=Math.max(0,G.boss.hp/STYLE.boss.hp*100)+'%';
-  updateCamera(ph2);
+   updateCamera(ph2);
+   MUSIC.tick();
 
   if(ph2!=='menu'){
     $('time').textContent=G.time.toFixed(2);$('time').classList.toggle('low',G.time<10&&ph2==='combat');
