@@ -976,7 +976,7 @@ function buildEnemy(type){
   }else if(und){
     spine.add(fl);fl.position.set(0,.3,.3);
     const lean=type==='zombie'?.28:type==='runner'?.5:.42;spine.userData.hunch=lean;spine.userData.und=1;g('H').rotation.set(-lean*.8,0,type==='zombie'?.2:-.1);
-    g('shG').rotation.set(-1.2+lean,0,-.12);g('shS').rotation.set(-1.4+lean,0,.15);g('elG').rotation.x=-.5;g('elS').rotation.x=-.3;
+    g('shG').rotation.set(-1.5+lean,0,-.12);g('shS').rotation.set(-1.68+lean,0,.15);g('elG').rotation.x=-.5;g('elS').rotation.x=-.3;
     if(type==='zboss'){g('shS').scale.setScalar(1.7);g('shG').scale.setScalar(1.15);g('H').scale.setScalar(.9);g('hipL').scale.set(1.25,1,1.25);g('hipR').scale.set(1.25,1,1.25);
       root.traverse(o=>{if(!o.isMesh)return;let p=o;while(p&&p!==root){if(p.name==='hipL')o.userData.weakpart='left';else if(p.name==='hipR')o.userData.weakpart='right';else if(p.name==='H')o.userData.weakpart='head';p=p.parent}})}
   }else{spine.add(fl);g('shG').rotation.z=.08;g('shS').rotation.z=-.08;g('elG').rotation.x=-.25;g('elS').rotation.x=-.25}
